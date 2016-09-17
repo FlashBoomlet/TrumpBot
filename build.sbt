@@ -1,6 +1,12 @@
 import sbt.Keys.javaOptions
 
+// scalastyle:off
+
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
+
+mainClass in (Compile, run) := Some("decisionModel.StateDriver")
+
+
 lazy val root =
   (project in file(".")).aggregate(
     trumpBotCore
@@ -17,9 +23,9 @@ lazy val commonSettings = Seq(
   ))
 
 lazy val trumpBotCore = (project in file ("trumpBotCore"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := "trumpBotCore",
-    version := "0.0.0"
-  )
+.settings(commonSettings: _*)
+.settings(
+  name := "trumpBotCore",
+  version := "0.0.0"
+)
 
