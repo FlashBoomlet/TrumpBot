@@ -4,7 +4,7 @@ import sbt.Keys.javaOptions
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
-mainClass in (Compile, run) := Some("com.flashboomlet.bot.Driver")
+mainClass in (Compile, run) := Some("com.flashboomlet.Driver")
 
 
 lazy val root =
@@ -36,6 +36,7 @@ lazy val trumpBotCore = (project in file ("trumpBotCore"))
       "com.typesafe" % "config" % "1.3.0",
       "org.reactivemongo" %% "reactivemongo" % "0.11.14",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+
     )
   )
 
