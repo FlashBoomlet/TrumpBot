@@ -20,7 +20,12 @@ lazy val commonSettings = Seq(
     "Typesafe Releases" at "https://repo.typesafe.com/typesafe/maven-releases/",
     "Maven central" at "http://repo1.maven.org/maven2/",
     "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
-  ))
+  ),
+  libraryDependencies ++= Seq(
+    "org.reactivemongo" %% "reactivemongo" % "0.11.13",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+  )
+)
 
 lazy val trumpBotCore = (project in file ("trumpBotCore"))
 .settings(commonSettings: _*)

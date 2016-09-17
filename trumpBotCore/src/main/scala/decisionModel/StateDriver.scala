@@ -1,7 +1,7 @@
 package decisionModel
 
 /**
-  * Driver for the wordstorm project
+  * Driver for the Trump Bot Core project
   */
 object StateDriver {
 
@@ -11,7 +11,7 @@ object StateDriver {
     * @param args Command-line arguments
     */
   def main(args: Array[String]): Unit = {
-    print("Hello World");
+    print("Database is now up and running!");
   }
 
 
