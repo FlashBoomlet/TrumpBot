@@ -5,3 +5,5 @@ package com.flashboomlet.db.implicits
   */
 trait MongoImplicits
 extends ConversationStateImplicits
+with SlackMessageImplicits
+with ResponseImplicits
