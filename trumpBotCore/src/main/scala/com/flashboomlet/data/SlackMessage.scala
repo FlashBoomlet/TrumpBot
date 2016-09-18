@@ -4,7 +4,8 @@ package com.flashboomlet.data
   * Created by ttlynch on 9/17/16.
   */
 case class SlackMessage (
-  id: Int,
+  conversationId: Int,
+  messageId: Int,
   channel: String,
   text: String,
   user: String,
