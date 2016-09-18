@@ -101,10 +101,32 @@ trait MongoConstants {
     */
   object ResponseConstants {
 
-    /* String constant for the `Id` field in a MongoDB Response document */
-    final val Id = "id"
+    /* String constant for the `content` field in a MongoDB Response document */
+    final val Content = "content"
 
-    // TODO: Add the rest of the values
+    /* String constant for the `topics` field in a MongoDB Response document */
+    final val Topics = "topics"
+
+    /* String constant for the `topics` field in a MongoDB Response document */
+    final val Topic = "topic"
+
+    /* String constant for the `conversationstate` field in a MongoDB Response document */
+    final val ConversationState = "conversationstate"
+
+    /* String constant for the `transitional` field in a MongoDB Response document */
+    final val Transitional = "transitional"
+
+    /* String constant for the `partoftopic` field in a MongoDB Response document */
+    final val PartOfTopic = "partoftopic"
+
+    /* String constant for the `positivesentiment` field in a MongoDB Response document */
+    final val PositiveSentiment = "positivesentiment"
+
+    /* String constant for the `negativesentiment` field in a MongoDB Response document */
+    final val NegativeSentiment = "negativesentiment"
+
+    /* String constant for the `tangenttopic` field in a MongoDB Response document */
+    final val TangentTopic = "tangenttopic"
   }
 
   /**
