@@ -35,8 +35,9 @@ lazy val trumpBotCore = (project in file ("trumpBotCore"))
       "io.scalac" %% "slack-scala-bot-core" % "0.2.1",
       "com.typesafe" % "config" % "1.3.0",
       "org.reactivemongo" %% "reactivemongo" % "0.11.14",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
-
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
+      "org.scalaj" %% "scalaj-http" % "2.3.0",
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.4"
     )
   )
 
