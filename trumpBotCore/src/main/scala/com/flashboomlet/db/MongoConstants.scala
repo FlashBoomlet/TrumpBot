@@ -18,12 +18,18 @@ trait MongoConstants {
   /* String constant for the database name */
   final val TrumpBotDatabaseString = "trumpBot"
 
-  /* String constant for the new york times article collection */
+  /* String constant for the conversation state collection */
   final val ConversationStateCollection = "conversationStates"
+
+  /* String constant for the slack message collection */
+  final val SlackMessageCollection = "slackMessage"
+
+  /* String constant for the slack message collection */
+  final val ResponseCollection = "responseMessage"
 
 
   /**
-    * String constants used in the New York Times Articles collection model schema
+    * String constants used in the conversation state collection model schema
     */
   object ConversationStateConstants {
 
@@ -64,6 +70,42 @@ trait MongoConstants {
     final val ParentTopic = "parenttopic"
   }
 
+
+  /**
+    * String constants used in the slack message collection model schema
+    */
+  object SlackMessageConstants {
+
+    /* String constant for the `Id` field in a MongoDB SlackMessage document */
+    final val Id = "id"
+
+    /* String constant for the `channel` field in a MongoDB SlackMessage document */
+    final val Channel = "channel"
+
+    /* String constant for the `text` field in a MongoDB SlackMessage document */
+    final val Text = "text"
+
+    /* String constant for the `user` field in a MongoDB SlackMessage document */
+    final val User = "user"
+
+    /* String constant for the `time` field in a MongoDB SlackMessage document */
+    final val Time = "time"
+
+    /* String constant for the `response` field in a MongoDB SlackMessage document */
+    final val Response = "response"
+
+  }
+
+  /**
+    * String constants used in the response collection model schema
+    */
+  object ResponseConstants {
+
+    /* String constant for the `Id` field in a MongoDB Response document */
+    final val Id = "id"
+
+    // TODO: Add the rest of the values
+  }
 
   /**
     * String constants used across the entirity of the MongoDB database

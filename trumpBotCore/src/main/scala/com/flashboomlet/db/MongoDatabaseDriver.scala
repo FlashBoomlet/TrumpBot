@@ -1,5 +1,7 @@
 package com.flashboomlet.db
 
+import com.flashboomlet.data.Response
+import com.flashboomlet.data.SlackMessage
 import com.typesafe.scalalogging.LazyLogging
 import com.flashboomlet.data.ConversationState
 import com.flashboomlet.db.implicits.MongoImplicits
@@ -33,7 +35,11 @@ class MongoDatabaseDriver
 
   val conversationStateCollection: BSONCollection = db(ConversationStateCollection)
 
-  /**
+  val slackMessageCollection: BSONCollection = db(SlackMessageCollection)
+
+  val responseCollection: BSONCollection = db(ResponseCollection)
+
+    /**
     * Gets a conversation state given a conversation state id
     *
     * @param id the conversation id that corresponds to the current conversation.
@@ -67,6 +73,16 @@ class MongoDatabaseDriver
       case _ =>
         logger.error(s"failed to update the conversation state ${cs.conversationId}")
     }
+  }
+
+  /** Simply inserts a slack message Model */
+  def insertSlackMessage(msg: SlackMessage): Unit = {
+    insert(msg, slackMessageCollection)
+  }
+
+  /** Simply inserts a Response Model */
+  def insertResponse(msg: Response): Unit = {
+    insert(msg, responseCollection)
   }
 
   /**
