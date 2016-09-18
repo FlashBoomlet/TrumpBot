@@ -6,7 +6,7 @@ import io.scalac.slack.common.BaseMessage
 import io.scalac.slack.common.OutboundMessage
 
 /**
-  * This is the heart and soul of the project. All incommint and outgoing traffic to chat
+  * This is the heart and soul of the project. All incoming and outgoing traffic to chat
   * will occur in the receive method.
   *
   * @param bus Message event bus used for listening to specific events

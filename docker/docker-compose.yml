@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  db:
+    image: mongo
+    container_name: mongo_trump
+    ports:
+      -  "27017:27017"
+    volumes:
+      - /srv/local/bigdon/data:/data/db
+  sentiment:
+    image: sentimentweb
+    container_name: sentimentweb_trump
+    ports:
+      -  "8081:8081"
