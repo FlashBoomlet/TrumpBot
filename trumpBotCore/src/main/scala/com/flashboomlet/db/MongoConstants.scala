@@ -48,6 +48,9 @@ trait MongoConstants {
     /* String constant for the `Topic` field in a MongoDB ConversationState document */
     final val Topic = "topic"
 
+    /* String constant for the `Topic` field in a MongoDB ConversationState document */
+    final val Topics = "topics"
+
     /* String constant for the `ConversationState` field in a MongoDB ConversationState document */
     final val ConversationState = "conversationstate"
 
@@ -76,8 +79,11 @@ trait MongoConstants {
     */
   object SlackMessageConstants {
 
-    /* String constant for the `Id` field in a MongoDB SlackMessage document */
-    final val Id = "id"
+    /* String constant for the `conversationid` field in a MongoDB SlackMessage document */
+    final val ConversationId = "conversationid"
+
+    /* String constant for the `messageid` field in a MongoDB SlackMessage document */
+    final val MessageId = "messageid"
 
     /* String constant for the `channel` field in a MongoDB SlackMessage document */
     final val Channel = "channel"

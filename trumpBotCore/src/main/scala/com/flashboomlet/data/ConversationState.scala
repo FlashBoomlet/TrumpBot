@@ -8,7 +8,8 @@ package com.flashboomlet.data
   * @param lengthState the length the message within the conversation
   * @param sentiment the sentiment of the conversation
   * @param topic the topic of the conversation
-  * @param conversationState the conversation state of whether is is a question or statement
+  * @param topics the topics/nouns of the conversation
+  * @param conversationState the conversation state of whether is is a question or statement (2, Start, 1 Conversation, 0 end)
   * @param transitionState a flag for if the conversation is in a transition state
   * @param topicResponseCount a count for how many messages have been sent on the current topic
   * @param troubleMode a flag for if the conversation is in trouble
@@ -22,7 +23,8 @@ case class ConversationState (
   lengthState: Int,
   sentiment: Long,
   topic: String,
-  conversationState: String,
+  topics: Array[String],
+  conversationState: Int,
   transitionState: Int,
   topicResponseCount: Int,
   troubleMode: Int,

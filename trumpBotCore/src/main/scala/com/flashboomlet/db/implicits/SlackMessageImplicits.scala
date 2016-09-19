@@ -18,7 +18,8 @@ trait SlackMessageImplicits extends MongoConstants {
   implicit object SlackMessageWriter extends BSONDocumentWriter[SlackMessage] {
 
     override def write(msg: SlackMessage): BSONDocument = BSONDocument(
-      SlackMessageConstants.Id -> BSONInteger(msg.id),
+      SlackMessageConstants.ConversationId -> BSONInteger(msg.conversationId),
+      SlackMessageConstants.MessageId -> BSONInteger(msg.messageId),
       SlackMessageConstants.Channel -> BSONString(msg.channel),
       SlackMessageConstants.Text -> BSONString(msg.text),
       SlackMessageConstants.User -> BSONString(msg.user),
@@ -32,7 +33,8 @@ trait SlackMessageImplicits extends MongoConstants {
   implicit object SlackMessageReader extends BSONDocumentReader[SlackMessage] {
 
     override def read(doc: BSONDocument): SlackMessage = {
-      val id = doc.getAs[Int](SlackMessageConstants.Id).get
+      val conversationId = doc.getAs[Int](SlackMessageConstants.ConversationId).get
+      val messageId = doc.getAs[Int](SlackMessageConstants.MessageId).get
       val channel = doc.getAs[String](SlackMessageConstants.Channel).get
       val text = doc.getAs[String](SlackMessageConstants.Text).get
       val user = doc.getAs[String](SlackMessageConstants.User).get
@@ -40,7 +42,8 @@ trait SlackMessageImplicits extends MongoConstants {
       val response = doc.getAs[String](SlackMessageConstants.Response).get
 
       SlackMessage(
-        id = id,
+        conversationId = conversationId,
+        messageId = messageId,
         channel = channel,
         text = text,
         user = user,

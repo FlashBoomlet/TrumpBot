@@ -21,7 +21,8 @@ trait ConversationStateImplicits extends MongoConstants {
       ConversationStateConstants.LengthState -> BSONInteger(cs.lengthState),
       ConversationStateConstants.Sentiment -> BSONLong(cs.sentiment),
       ConversationStateConstants.Topic -> BSONString(cs.topic),
-      ConversationStateConstants.ConversationState -> BSONString(cs.conversationState),
+      ConversationStateConstants.Topics -> cs.topic,
+      ConversationStateConstants.ConversationState -> BSONInteger(cs.conversationState),
       ConversationStateConstants.TransitionState -> BSONInteger(cs.transitionState),
       ConversationStateConstants.TopicResponseCount -> BSONInteger(cs.topicResponseCount),
       ConversationStateConstants.TroubleMode -> BSONInteger(cs.troubleMode),
@@ -41,7 +42,8 @@ trait ConversationStateImplicits extends MongoConstants {
       val lengthState = doc.getAs[Int](ConversationStateConstants.LengthState).get
       val sentiment = doc.getAs[Long](ConversationStateConstants.Sentiment).get
       val topic = doc.getAs[String](ConversationStateConstants.Topic).get
-      val conversationState = doc.getAs[String](ConversationStateConstants.ConversationState).get
+      val topics = doc.getAs[Array[String]](ConversationStateConstants.Topics).get
+      val conversationState = doc.getAs[Int](ConversationStateConstants.ConversationState).get
       val transitionState = doc.getAs[Int](ConversationStateConstants.TransitionState).get
       val topicResponseCount = doc.getAs[Int](ConversationStateConstants.TopicResponseCount).get
       val troubleMode = doc.getAs[Int](ConversationStateConstants.TroubleMode).get
@@ -56,6 +58,7 @@ trait ConversationStateImplicits extends MongoConstants {
         lengthState = lengthState,
         sentiment = sentiment,
         topic = topic,
+        topics = topics,
         conversationState = conversationState,
         transitionState = transitionState,
         topicResponseCount = topicResponseCount,
