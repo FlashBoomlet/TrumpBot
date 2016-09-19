@@ -3,6 +3,7 @@ package com.flashboomlet
 import akka.actor.ActorSystem
 import akka.actor.Props
 import bot.TrumpBotBundle
+import com.flashboomlet.preprocessing.NLPClientFactory
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.api.BotInfo
 import io.scalac.slack.api.Start
@@ -21,8 +22,10 @@ object Driver extends Shutdownable {
   val System = ActorSystem("trump")
   val EventBus = new MessageEventBus
   val SlackBot = System.actorOf(
+  
     Props(classOf[SlackBotActor], new TrumpBotBundle(), EventBus, this, None), "slack-com.flashboomlet.bot")
-  var BotInfo: Option[BotInfo] = None
+  val BotInfo: Option[BotInfo] = None
+  implicit val DefaultNLPClient = NLPClientFactory.defaultNounParser()
 
   /** Entry point to the TrumpBot program
     *

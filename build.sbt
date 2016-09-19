@@ -20,7 +20,8 @@ lazy val commonSettings = Seq(
     "Typesafe Releases" at "https://repo.typesafe.com/typesafe/maven-releases/",
     "Maven central" at "http://repo1.maven.org/maven2/",
     "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
-    "scalac repo" at "https://raw.githubusercontent.com/ScalaConsultants/mvn-repo/master/"
+    "scalac repo" at "https://raw.githubusercontent.com/ScalaConsultants/mvn-repo/master/",
+    Resolver.mavenLocal
   )
 )
 
@@ -37,7 +38,9 @@ lazy val trumpBotCore = (project in file ("trumpBotCore"))
       "org.reactivemongo" %% "reactivemongo" % "0.11.14",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
       "org.scalaj" %% "scalaj-http" % "2.3.0",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.4"
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.4",
+      "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0",
+      "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models"
     )
   )
 
