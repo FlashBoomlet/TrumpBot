@@ -7,6 +7,8 @@ package com.flashboomlet.preprocessing
   * @param allTopics All topics included in text including primary classification
   * @param nounsAndPronouns All nouns and pronouns in the sentence
   * @param message The entire original message.
+  * @param messageId the id of the message
+  * @param conversationId the id of the conversation
   */
 case class ClassifiedInput(
   sentiment: Sentiment,
@@ -14,5 +16,7 @@ case class ClassifiedInput(
   allTopics: List[String],
   nounsAndPronouns: List[String],
   wordCount: Int,
-  message: String
+  message: String,
+  messageId: Int,
+  conversationId: Int
 )

@@ -7,6 +7,8 @@ import com.flashboomlet.data.ConversationState
   */
 class TroubleMode {
 
+  val r = scala.util.Random
+
   /**
     * Trouble Mode will take the given input and get the bot out of the situation
     * and back on track into a topic that it knows.
@@ -14,13 +16,14 @@ class TroubleMode {
     * This function will produce a stochastic output. It will randomly suggest a topic
     * to get back on track with.
     *
-    * @param cs the conversation state of the converstion
+    * @param cs the conversation state of the conversation
     * @return the response
     */
   def troubleMode(cs: ConversationState): String = {
 
     // Pick a random topic that hasn't been covered and can a response
-    "return"
+    "Are you even taking this conversation seriously? There are important issues to worry about " +
+    "like " + selectRandomTopic()
   }
 
   /**
@@ -30,17 +33,30 @@ class TroubleMode {
     * @return a random topic from the response database
     */
   def selectRandomTopic(): String = {
-    "clinton"
+    val topics = List("wall",
+      "terrorism" ,
+      "china" ,
+      "taxes" ,
+      "children" ,
+      "immigration" ,
+      "trade" ,
+      "police" ,
+      "guns" ,
+      "education" ,
+      "jobs" ,
+      "ivanka" ,
+      "melania",
+      "eric",
+      "jr",
+      "character",
+      "clinton",
+      "abortion",
+      "healthcare",
+      "foreignpolicy")
+
+    val len = topics.length
+    val i = r.nextInt(len)
+    topics(i)
   }
 
-  /**
-    * Recovered determines if the user has recovered or not from trouble.
-    *
-    * @param cs the current conversation state
-    * @param pcs the past conversation state
-    * @return if the user deserves to still keep the conversation going
-    */
-  def recovered(cs: ConversationState, pcs: ConversationState): Boolean = {
-    false
-  }
 }

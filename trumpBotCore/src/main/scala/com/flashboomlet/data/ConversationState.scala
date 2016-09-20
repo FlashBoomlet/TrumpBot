@@ -3,9 +3,9 @@ package com.flashboomlet.data
 /**
   * Conversation State is a state tracking object to track where the conversation is at
   *
-  * @param conversationId the id of the conversation
-  * @param emotionalState the emotional state of the conversation
-  * @param lengthState the length the message within the conversation
+  * @param conversationId the id of the conversation (this id should never change and should stay the same for that conversation)
+  * @param messageId the id of the message that corresponds to the current state
+  * @param lengthState the length the message within the conversation (the number of calculaterd words)
   * @param sentiment the sentiment of the conversation
   * @param topic the topic of the conversation
   * @param topics the topics/nouns of the conversation
@@ -16,10 +16,13 @@ package com.flashboomlet.data
   * @param escapeMode a flag for if the escape mode needs to be activated
   * @param tangent a flag for if the conversation has gone on a tangent from the original state
   * @param parentTopic a topic from which the tangent started
+  * @param message the actual message content
+  * @param responseMessage the message being send back
+  * @param tangentCount the count of tangents that have occurred
   */
 case class ConversationState(
   conversationId: Long,
-  emotionalState: String,
+  messageId: Int,
   lengthState: Int,
   sentiment: Long,
   topic: String,
@@ -30,5 +33,8 @@ case class ConversationState(
   troubleMode: Int,
   escapeMode: Int,
   tangent: Int,
-  parentTopic: String
+  parentTopic: String,
+  message: String,
+  responseMessage: String,
+  tangentCount: Int
 )

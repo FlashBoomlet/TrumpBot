@@ -17,7 +17,7 @@ trait ConversationStateImplicits extends MongoConstants {
 
     override def write(cs: ConversationState): BSONDocument = BSONDocument(
       ConversationStateConstants.ConversationId -> BSONLong(cs.conversationId),
-      ConversationStateConstants.EmotionalState -> BSONString(cs.emotionalState),
+      ConversationStateConstants.MessageId -> BSONInteger(cs.messageId),
       ConversationStateConstants.LengthState -> BSONInteger(cs.lengthState),
       ConversationStateConstants.Sentiment -> BSONLong(cs.sentiment),
       ConversationStateConstants.Topic -> BSONString(cs.topic),
@@ -28,7 +28,10 @@ trait ConversationStateImplicits extends MongoConstants {
       ConversationStateConstants.TroubleMode -> BSONInteger(cs.troubleMode),
       ConversationStateConstants.EscapeMode -> BSONInteger(cs.escapeMode),
       ConversationStateConstants.Tangent -> BSONInteger(cs.tangent),
-      ConversationStateConstants.ParentTopic -> BSONString(cs.parentTopic)
+      ConversationStateConstants.ParentTopic -> BSONString(cs.parentTopic),
+      ConversationStateConstants.Message -> BSONString(cs.message),
+      ConversationStateConstants.ResponseMessage -> BSONString(cs.responseMessage),
+      ConversationStateConstants.TangentCount -> BSONInteger(cs.tangentCount)
     )
   }
 
@@ -38,7 +41,7 @@ trait ConversationStateImplicits extends MongoConstants {
 
     override def read(doc: BSONDocument): ConversationState = {
       val conversationId = doc.getAs[Long](ConversationStateConstants.ConversationId).get
-      val emotionalState = doc.getAs[String](ConversationStateConstants.EmotionalState).get
+      val messageId = doc.getAs[Int](ConversationStateConstants.MessageId).get
       val lengthState = doc.getAs[Int](ConversationStateConstants.LengthState).get
       val sentiment = doc.getAs[Long](ConversationStateConstants.Sentiment).get
       val topic = doc.getAs[String](ConversationStateConstants.Topic).get
@@ -50,11 +53,14 @@ trait ConversationStateImplicits extends MongoConstants {
       val escapeMode = doc.getAs[Int](ConversationStateConstants.EscapeMode).get
       val tangent = doc.getAs[Int](ConversationStateConstants.Tangent).get
       val parentTopic = doc.getAs[String](ConversationStateConstants.ParentTopic).get
+      val message = doc.getAs[String](ConversationStateConstants.Message).get
+      val responseMessage = doc.getAs[String](ConversationStateConstants.ResponseMessage).get
+      val tangentCount = doc.getAs[Int](ConversationStateConstants.TangentCount).get
 
 
       ConversationState(
         conversationId = conversationId,
-        emotionalState = emotionalState,
+        messageId = messageId,
         lengthState = lengthState,
         sentiment = sentiment,
         topic = topic,
@@ -65,7 +71,10 @@ trait ConversationStateImplicits extends MongoConstants {
         troubleMode = troubleMode,
         escapeMode = escapeMode,
         tangent = tangent,
-        parentTopic = parentTopic
+        parentTopic = parentTopic,
+        message = message,
+        responseMessage = responseMessage,
+        tangentCount = tangentCount
       )
     }
   }

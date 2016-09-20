@@ -44,14 +44,4 @@ class EscapeMode {
     }
   }
 
-  /**
-    * Recovered determines if the user has recovered or not from escape mode.
-    *
-    * @param cs the current conversation state
-    * @param pcs the past conversation state
-    * @return if the user has recovered from being banned
-    */
-  def recovered(cs: ConversationState, pcs: ConversationState): Boolean = {
-    false
-  }
 }

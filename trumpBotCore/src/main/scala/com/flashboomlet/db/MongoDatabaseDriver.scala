@@ -45,14 +45,23 @@ class MongoDatabaseDriver
     * @param id the conversation id that corresponds to the current conversation.
     * @return the conversation state of the conversation
     */
-  def getConversationState(id: Long): Option[ConversationState] ={
-    val future: Future[Option[ConversationState]] = conversationStateCollection
+  def getConversationStates(id: Long): List[ConversationState] ={
+    val future: Future[List[ConversationState]] = conversationStateCollection
       .find(BSONDocument(
         ConversationStateConstants.ConversationId -> id ))
       .cursor[ConversationState]().collect[List]()
-      .map { list => list.headOption }
 
     Await.result(future, Duration.Inf)
+  }
+
+  /**
+    * Gets the responses from the response collection
+    *
+    * @return the responses
+    */
+  def getResponses(): List[Response] ={
+    Await.result(responseCollection.find(BSONDocument())
+    .cursor[Response]().collect[List](), Duration.Inf)
   }
 
   /** Simply inserts a conversation state Model */
@@ -67,7 +76,8 @@ class MongoDatabaseDriver
     */
   def updateConversationState(cs: ConversationState): Unit = {
     val selector = BSONDocument(
-      ConversationStateConstants.ConversationId -> cs.conversationId)
+      ConversationStateConstants.ConversationId -> cs.conversationId,
+      ConversationStateConstants.MessageId -> cs.messageId)
     conversationStateCollection.findAndUpdate(selector, cs).onComplete {
       case Success(result) => logger.info("successfully updated conversation state")
       case _ =>
