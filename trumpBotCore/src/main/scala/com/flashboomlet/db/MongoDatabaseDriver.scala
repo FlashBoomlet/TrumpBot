@@ -6,8 +6,12 @@ import com.typesafe.scalalogging.LazyLogging
 import com.flashboomlet.data.ConversationState
 import com.flashboomlet.db.implicits.MongoImplicits
 import reactivemongo.api.BSONSerializationPack.Writer
+import reactivemongo.api.DefaultDB
+import reactivemongo.api.FailoverStrategy
+import reactivemongo.api.MongoConnection
 import reactivemongo.api.MongoDriver
 import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONObjectID
 
@@ -31,7 +35,7 @@ class MongoDatabaseDriver
 
   val connection = driver.connection(List(DatabaseIp))
 
-  val db = connection(TrumpBotDatabaseString)
+  val db: DefaultDB = Await.result(connection.database(TrumpBotDatabaseString, FailoverStrategy.default), Duration.Inf)
 
   val conversationStateCollection: BSONCollection = db(ConversationStateCollection)
 
@@ -108,11 +112,11 @@ class MongoDatabaseDriver
     */
   private def insert[T](document: T, coll: BSONCollection)(implicit writer: Writer[T]): Unit = {
 
-    coll.insert(document).onComplete {
-      case Failure(e) =>
-        logger.error(s"Failed to insert and create new id into $coll")
-        throw e// we fucked up
-      case Success(writeResult) => // logging needed we won
+    val futureRes = coll.insert(document)
+    val res = Await.result(futureRes, Duration.Inf)
+    res.errmsg match {
+      case Some(m) => logger.error(s"Failed to insert and create new id into $coll")
+      case _ => // logging needed we won
     }
   }
 }
@@ -127,5 +131,5 @@ object MongoDatabaseDriver {
  *
     * @return a new instance of MongoDatabseDriver
     */
-  def apply(): MongoDatabaseDriver = new MongoDatabaseDriver
+  def apply(): MongoDatabaseDriver = new MongoDatabaseDriver()
 }

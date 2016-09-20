@@ -126,7 +126,7 @@ class Conversation {
     val responses: List[Response] = db.getResponses()
     val topics = cs.topics
     // TODO: Insert code to get out if there is a canned trigger first
-    val respFiltered = responses.filter(_.topic == cs.topic)
+    val respFiltered = responses.filter(_.topics == cs.topic)
     val pastResponses = pastStates.map(_.responseMessage)
 
     val responsesWithSimilarity = respFiltered.map { r =>

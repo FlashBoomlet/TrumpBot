@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.flashboomlet.bot.SlackConfig
+import com.flashboomlet.data.ResponsePropogator
+import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.NLPClientFactory
 import com.flashboomlet.preprocessing.naivebayes.NaiveBayesClassifierFactory
 import com.flashboomlet.preprocessing.naivebayes.WrappedClassifier
@@ -34,13 +36,14 @@ object Driver extends Shutdownable {
   val BotInfo: Option[BotInfo] = None
   val DefaultNLPClient = NLPClientFactory.defaultNounParser()
   val Classifier: WrappedClassifier = NaiveBayesClassifierFactory.loadClassifier()
+  val DatabaseDriver: MongoDatabaseDriver = MongoDatabaseDriver()
 
   /** Entry point to the TrumpBot program
     *
     * @param args command-line arguments
     */
   def main(args: Array[String]) {
-    println(s"With API key ${SlackConfig.ApiKey}")
+    ResponsePropogator.populateResponses(DatabaseDriver)
     try {
       SlackBot ! Start
 

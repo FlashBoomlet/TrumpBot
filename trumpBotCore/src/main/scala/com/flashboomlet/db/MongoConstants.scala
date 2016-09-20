@@ -119,6 +119,9 @@ trait MongoConstants {
     /* String constant for the `content` field in a MongoDB Response document */
     final val Content = "content"
 
+    /* String constant for the `cannedTrigger` field in a MongoDB Response document */
+    final val CannedTrigger = "cannedtrigger"
+
     /* String constant for the `topics` field in a MongoDB Response document */
     final val Topics = "topics"
 
