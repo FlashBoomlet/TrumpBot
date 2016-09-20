@@ -43,6 +43,7 @@ class MongoDatabaseDriver
 
   val responseCollection: BSONCollection = db(ResponseCollection)
 
+
     /**
     * Gets a conversation state given a conversation state id
     *

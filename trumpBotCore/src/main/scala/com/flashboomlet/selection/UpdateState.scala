@@ -15,7 +15,7 @@ class UpdateState {
 
   val db: MongoDatabaseDriver = new MongoDatabaseDriver()
   val maxTopics = 7
-  val trcMax = 3
+  val trcMax = 5
 
   /**
     * This function will update the state of the conversation to keep track of where
@@ -45,7 +45,8 @@ class UpdateState {
         conversationId = ci.conversationId,
         messageId = ci.messageId,
         lengthState = ci.wordCount,
-        sentiment = sentToLong(ci.sentiment),
+        sentimentConfidence = scala.math.ceil(ci.sentiment.confidence.toDouble).toLong,
+        sentimentClass = ci.sentiment.result,
         topic = topic,
         topics = ci.allTopics,
         conversationState = state,
@@ -73,12 +74,13 @@ class UpdateState {
       conversationId = ci.conversationId,
       messageId = ci.messageId,
       lengthState = ci.wordCount,
-      sentiment = sentToLong(ci.sentiment),
+      sentimentConfidence = scala.math.ceil(ci.sentiment.confidence.toDouble).toLong,
+      sentimentClass = ci.sentiment.result,
       topic = ci.primaryTopic,
       topics = ci.allTopics,
       conversationState = 2,
       transitionState = false,
-      topicResponseCount = 1,
+      topicResponseCount = 0,
       troubleMode = false,
       escapeMode = false,
       tangent = false,
@@ -96,7 +98,7 @@ class UpdateState {
     * @return the topic response count
     */
   private def getTRC(lastState: ConversationState): Int = {
-    if (lastState.tangent && lastState.topicResponseCount > 2) {
+    if (lastState.tangent || lastState.transitionState) {
       0
     } else {
       lastState.topicResponseCount + 1
@@ -150,10 +152,9 @@ class UpdateState {
       } else {
         2
       }
-    }
-    else if (lastState.conversationState == 1) {
-      if (topicCount == maxTopics && lastState.topicResponseCount > 3) {
-        0 // Move on to the end
+    } else if (lastState.conversationState == 1) {
+      if (topicCount >= maxTopics && lastState.topicResponseCount >= trcMax) {
+        1 // Move on to the end
       } else if (em) {
         0 // Stay in conversation state
       } else {
@@ -181,6 +182,7 @@ class UpdateState {
     ci: ClassifiedInput,
     pastStates: List[ConversationState]): Boolean ={
 
+    // Find average sentiment of the conversation by the other person to gage interest.
     val lengths = pastStates.map(_.lengthState)
     val count = pastStates.length
     val avgLength = lengths.sum / count
@@ -189,19 +191,19 @@ class UpdateState {
     if (lastState.troubleMode) {
       // already in trouble mode
       // check if they have gotten out or upgrade to escape
-      sentToLong(ci.sentiment) < 0
-    }
-    else {
+      ci.sentiment.result == "Negative" && math.ceil(ci.sentiment.confidence.toDouble).toLong > 90
+    } else {
       // not already in trouble mode
       // check to see if they deserve to be in
-      if (lastState.sentiment < 0) { // And the current state is negative, bam
+      if (lastState.sentimentClass == "Negative" && lastState.sentimentConfidence > 90) {
+        // And the current state is negative, bam
         // The user must be out of the start to be in trouble mode
         if (count > 2) {
           lastState.lengthState > (avgLength + standardDev)
         } else {
           false
         }
-      } else{
+      } else {
         false
       }
     }
@@ -227,7 +229,7 @@ class UpdateState {
       lastState: ConversationState,
       trouble: Boolean): Boolean = {
     // if the the past message was in trouble and this one is in trouble, we in trouble
-    val tmCount = pastStates.count(_.troubleMode == 1)
+    val tmCount = pastStates.count(_.troubleMode)
     tmCount >= 2 && trouble
   }
 

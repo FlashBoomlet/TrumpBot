@@ -43,7 +43,10 @@ trait MongoConstants {
     final val LengthState = "lengthstate"
 
     /* String constant for the `Sentiment` field in a MongoDB ConversationState document */
-    final val Sentiment = "sentiment"
+    final val SentimentConfidence = "sentimentconfidence"
+
+    /* String constant for the `Sentiment` field in a MongoDB ConversationState document */
+    final val SentimentClass = "sentimentclass"
 
     /* String constant for the `Topic` field in a MongoDB ConversationState document */
     final val Topic = "topic"

@@ -20,7 +20,8 @@ trait ConversationStateImplicits extends MongoConstants {
       ConversationStateConstants.ConversationId -> BSONLong(cs.conversationId),
       ConversationStateConstants.MessageId -> BSONInteger(cs.messageId),
       ConversationStateConstants.LengthState -> BSONInteger(cs.lengthState),
-      ConversationStateConstants.Sentiment -> BSONLong(cs.sentiment),
+      ConversationStateConstants.SentimentConfidence -> BSONLong(cs.sentimentConfidence),
+      ConversationStateConstants.SentimentClass -> BSONString(cs.sentimentClass),
       ConversationStateConstants.Topic -> BSONString(cs.topic),
       ConversationStateConstants.Topics -> cs.topic,
       ConversationStateConstants.ConversationState -> BSONInteger(cs.conversationState),
@@ -44,7 +45,8 @@ trait ConversationStateImplicits extends MongoConstants {
       val conversationId = doc.getAs[Long](ConversationStateConstants.ConversationId).get
       val messageId = doc.getAs[Int](ConversationStateConstants.MessageId).get
       val lengthState = doc.getAs[Int](ConversationStateConstants.LengthState).get
-      val sentiment = doc.getAs[Long](ConversationStateConstants.Sentiment).get
+      val sentimentConf = doc.getAs[Long](ConversationStateConstants.SentimentConfidence).get
+      val sentimentClass = doc.getAs[String](ConversationStateConstants.SentimentClass).get
       val topic = doc.getAs[String](ConversationStateConstants.Topic).get
       val topics = doc.getAs[List[String]](ConversationStateConstants.Topics).getOrElse(List())
       val conversationState = doc.getAs[Int](ConversationStateConstants.ConversationState).get
@@ -63,7 +65,8 @@ trait ConversationStateImplicits extends MongoConstants {
         conversationId = conversationId,
         messageId = messageId,
         lengthState = lengthState,
-        sentiment = sentiment,
+        sentimentConfidence = sentimentConf,
+        sentimentClass = sentimentClass,
         topic = topic,
         topics = topics,
         conversationState = conversationState,

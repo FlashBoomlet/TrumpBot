@@ -4,6 +4,7 @@ import com.flashboomlet.data.ConversationState
 import com.flashboomlet.data.Response
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
+import com.flashboomlet.preprocessing.Sentiment
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -58,15 +59,15 @@ class Conversation extends LazyLogging {
     * @return a response to the user
     */
   private def ConversationStart(cs: ConversationState): String = {
-    if (cs.topicResponseCount <= 1 ) {
+    if (cs.topicResponseCount < 1 ) {
       "Hello, I am Donald J. Trump, the Republican Presidential Nominee. How are you doing?"
     } else {
       // update conversation state to get out of the start mode.
-      if (cs.sentiment < 0) {
-        val response: String = "I am sorry to hear that. I am Making America Great Again! \n"
+      if (cs.sentimentClass == "Negative" && cs.sentimentConfidence > 51) {
+        val response: String = "I am sorry to hear that. I am Making America Great Again!"
         response + randomConversationStarter()
       } else {
-        val response: String = "I am glad to hear that. I am Making America Great Again! \n"
+        val response: String = "I am glad to hear that. I am Making America Great Again!"
         response + randomConversationStarter()
       }
     }
@@ -94,7 +95,7 @@ class Conversation extends LazyLogging {
       } else {
         // If greater than 3 replies, then transition to a new topic.
         val transition: String = if (cs.transitionState) {
-          "\nWhat other questions do you have for me? "
+          " What other questions do you have for me?"
         } else {
           ""
         }
@@ -118,7 +119,7 @@ class Conversation extends LazyLogging {
     val responses: List[Response] = db.getResponses()
     val topics = cs.topics
     // TODO: Insert code to get out if there is a canned trigger first
-    val respFiltered = responses.filter(_.topics == cs.topic)
+    val respFiltered = responses.filter(_.primaryTopic == cs.topic)
     val pastResponses = pastStates.map(_.responseMessage)
 
     val responsesWithSimilarity = respFiltered.map { r =>
@@ -129,16 +130,18 @@ class Conversation extends LazyLogging {
       )
     }
 
-    val positiveFlag: Boolean = cs.sentiment >= 0
+    val positiveFlag: Boolean = cs.sentimentClass == "Positive"
 
     val validResponses = responsesWithSimilarity
       .filter(s => !s._3.contains(s._1.content))
-      .filter(s => s._1.positiveSentiment == positiveFlag )
+//      .filter(s => s._1.positiveSentiment == positiveFlag ) // TODO: This was causing problems
       .sortBy(_._2).reverse
+
+    println(validResponses)
 
     if (validResponses.length < 1) {
       // Well we messed up, time to leave
-      ConversationEnd(cs, pastStates)
+      "Sorry, I'm not comfortable talking about that at the moment."
     } else {
       validResponses.head._1.content
     }
@@ -169,25 +172,23 @@ class Conversation extends LazyLogging {
       pastStates: List[ConversationState]): String = {
 
     // Find average sentiment of the conversation by the other person to gage interest.
-    val lengths = pastStates.map(_.sentiment)
-    val count = pastStates.length
-    val avg = if (count != 0) {
-      lengths.sum / count
-    } else {
-      0
-    }
+    val sentiments: List[(Long, String)] = pastStates.map(s =>
+      (s.sentimentConfidence, s.sentimentClass))
 
-    val sentThreshold = 0.5
+    val averageSentiment: Double = Util.calculateAverageSentiment(
+      (cs.sentimentConfidence, cs.sentimentClass) +: sentiments)
 
-    if (cs.sentiment < sentThreshold) {
+    val sentThreshold = -0.5
+
+    if (averageSentiment < sentThreshold) {
       // escape mode
       em.escapeMode(cs)
-    } else if (avg > sentThreshold) {
+    } else if (averageSentiment > sentThreshold) {
       //    thank for support, ask for donation, tell them to preach the good word.
       val response: String = "Thank you for your support! I greatly appreciate it. Together we " +
-      "will will make America Great Again!\n\n If you would like to help out with my campaign, " +
+      "will will make America Great Again! If you would like to help out with my campaign, " +
       "the easiest way to get involved would be to go to https://www.donaldjtrump.com/ and " +
-      "make a donation. \n\n Together we will beat corrupt Hillary!"
+      "make a donation. Together we will beat corrupt Hillary!"
       response
     } else {
       // leave in a civil manner. Refer them to the website to find out more details.
@@ -208,7 +209,7 @@ class Conversation extends LazyLogging {
     * @return a random response from the database that has not be used prior.
     */
   private def randomConversationStarter(): String = {
-    "\nWhat questions do you have for me? "
+    " What questions do you have for me? "
   }
 
   /**
@@ -223,7 +224,8 @@ class Conversation extends LazyLogging {
       conversationId = cs.conversationId,
       messageId = cs.messageId,
       lengthState = cs.lengthState,
-      sentiment = cs.sentiment,
+      sentimentConfidence = cs.sentimentConfidence,
+      sentimentClass = cs.sentimentClass,
       topic = topic, // Change the topic
       topics = cs.topics,
       conversationState = cs.conversationState,
@@ -251,7 +253,8 @@ class Conversation extends LazyLogging {
       conversationId = cs.conversationId,
       messageId = cs.messageId,
       lengthState = cs.lengthState,
-      sentiment = cs.sentiment,
+      sentimentConfidence = cs.sentimentConfidence,
+      sentimentClass = cs.sentimentClass,
       topic = cs.topic,
       topics = cs.topics,
       conversationState = cs.conversationState,

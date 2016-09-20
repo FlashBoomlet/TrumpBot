@@ -23,7 +23,7 @@ class TroubleMode {
 
     // Pick a random topic that hasn't been covered and can a response
     "Are you even taking this conversation seriously? There are important issues to worry about " +
-    "like " + selectRandomTopic()
+    "like " + selectRandomTopic() + "."
   }
 
   /**
@@ -33,7 +33,8 @@ class TroubleMode {
     * @return a random topic from the response database
     */
   def selectRandomTopic(): String = {
-    val topics = List("wall",
+    val topics = List(
+      "the wall",
       "terrorism" ,
       "china" ,
       "taxes" ,
@@ -44,15 +45,15 @@ class TroubleMode {
       "guns" ,
       "education" ,
       "jobs" ,
-      "ivanka" ,
-      "melania",
-      "eric",
-      "jr",
-      "character",
-      "clinton",
+      "Ivanka" ,
+      "Melania",
+      "Eric Trump",
+      "Donald Trump Jr.",
+      "myself",
+      "Crooked Hillary",
       "abortion",
-      "healthcare",
-      "foreignpolicy")
+      "health care",
+      "foreign policy")
 
     val len = topics.length
     val i = r.nextInt(len)
