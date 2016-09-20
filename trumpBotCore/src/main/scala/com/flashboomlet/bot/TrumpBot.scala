@@ -1,6 +1,7 @@
 package com.flashboomlet.bot
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
 import com.flashboomlet.preprocessing.FastSentimentClassifier
 import com.flashboomlet.preprocessing.NLPUtil
@@ -23,7 +24,8 @@ class TrumpBot(
               override val bus: MessageEventBus,
               implicit val classifierWrapper: WrappedClassifier,
               implicit val objectMapper: ObjectMapper,
-              implicit val pipeline: StanfordCoreNLP)
+              implicit val pipeline: StanfordCoreNLP,
+              val databaseDriver: MongoDatabaseDriver)
     extends IncomingMessageListener with LazyLogging {
 
   val UserId: String = "U2CRTV145"
@@ -42,6 +44,7 @@ class TrumpBot(
   def receive: Receive = {
     case bm@BaseMessage(text, channel, user, dateTime, edited) =>
       if (UserId != user) {
+        val lowercase = text.toLowerCase()
         val primaryTopic = classifierWrapper.classifier.classify(text)
         val classifiedInput = ClassifiedInput(
           sentiment = FastSentimentClassifier.getSentiment(text),
@@ -50,17 +53,17 @@ class TrumpBot(
             NLPUtil.getAllTopics(classifierWrapper.topics, text)),
           nounsAndPronouns = NLPUtil.getNouns(text),
           wordCount = text.split(' ').length,
-          message = text,
+          message = lowercase,
           messageId = Math.floor(dateTime.toDouble).toInt,
           conversationId = conversationId
         )
         logger.info(s"Classified input: \n {}", classifiedInput.toString)
         val response = convoSelector.GenerateResponse(classifiedInput)
         // 40 word per minute typing
-        val responseDelay = MinuteInMillies * (response.split(' ').length / 40)
+        val responseDelay = MinuteInMillies * (response.split(' ').length / 200)
         Thread.sleep(responseDelay)
         // free to use classified input here
-        // publish(OutboundMessage(channel, "message goes here")) // Send message
+        publish(OutboundMessage(channel, response)) // Send message
       }
     case _ => ()
   }

@@ -25,7 +25,8 @@ class TrumpBotBundle extends BotModules {
         Driver.EventBus,
         Driver.Classifier,
         Driver.objectMapper,
-        Driver.DefaultNLPClient),
+        Driver.DefaultNLPClient,
+        Driver.DatabaseDriver),
       "trumpBot")
   }
 }

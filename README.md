@@ -11,6 +11,7 @@
 Before running please run the scripts:
 
     > ./docker/install_sentiment_docker.sh
+    > docker pull mongo:latest
 
 ## Running
 
