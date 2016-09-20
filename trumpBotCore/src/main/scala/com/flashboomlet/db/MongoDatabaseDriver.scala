@@ -84,8 +84,7 @@ class MongoDatabaseDriver
       ConversationStateConstants.MessageId -> cs.messageId)
     conversationStateCollection.findAndUpdate(selector, cs).onComplete {
       case Success(result) => logger.info("successfully updated conversation state")
-      case _ =>
-        logger.error(s"failed to update the conversation state ${cs.conversationId}")
+      case _ => logger.error(s"failed to update the conversation state ${cs.conversationId}")
     }
   }
 

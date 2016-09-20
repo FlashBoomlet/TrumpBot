@@ -25,23 +25,20 @@ class UpdateState {
     * @return a conversation State of the conversation state
     */
   def updateState(ci: ClassifiedInput): ConversationState = {
-
     val pastStates = db.getConversationStates(ci.conversationId)
-    if(pastStates.length < 1){
+    pastStates.foreach(s => println(s))
+    if (pastStates.length < 1) {
       initializeState(ci)
-    }
-    else{
+    } else {
       val lastState = pastStates.sortBy(_.messageId).reverse.head // TODO: check to see if it is max id first
       val topicCount = pastStates.map(_.topic).distinct.length
-
-
       val trc = getTRC(lastState)
-      val transition = if(trc > trcMax){1}else{0}
+      val transition = trc > trcMax
       val tm = troubleMode(lastState, ci, pastStates)
       val em = escapeMode(pastStates, lastState, tm)
       val topic = getTopic(lastState, ci)
-      val parentTopic = if(lastState.parentTopic == topic){""}else{lastState.parentTopic}
-      val tangent = if(lastState.parentTopic != "" && lastState.tangent == 1){1}else{0}
+      val parentTopic = if (lastState.parentTopic == topic) { "" } else { lastState.parentTopic }
+      val tangent = lastState.parentTopic != "" && lastState.tangent
       val state = getState(lastState, pastStates, topicCount, tm, em)
 
       ConversationState(
@@ -80,11 +77,11 @@ class UpdateState {
       topic = ci.primaryTopic,
       topics = ci.allTopics,
       conversationState = 2,
-      transitionState = 0,
+      transitionState = false,
       topicResponseCount = 1,
-      troubleMode = 0,
-      escapeMode = 0,
-      tangent = 0,
+      troubleMode = false,
+      escapeMode = false,
+      tangent = false,
       parentTopic = "",
       message = ci.message,
       responseMessage = "",
@@ -99,10 +96,9 @@ class UpdateState {
     * @return the topic response count
     */
   private def getTRC(lastState: ConversationState): Int = {
-    if(lastState.tangent == 1 && lastState.topicResponseCount > 2){
+    if (lastState.tangent && lastState.topicResponseCount > 2) {
       0
-    }
-    else{
+    } else {
       lastState.topicResponseCount + 1
     }
   }
@@ -117,7 +113,7 @@ class UpdateState {
     * @return the topic for this current state
     */
   private def getTopic(lastState: ConversationState, ci: ClassifiedInput): String = {
-    if(lastState.tangent == 1 && lastState.topicResponseCount > 2){
+    if(lastState.tangent && lastState.topicResponseCount > 2){
       lastState.parentTopic
     }
     else{
@@ -144,34 +140,26 @@ class UpdateState {
       lastState: ConversationState,
       pastStates: List[ConversationState],
       topicCount: Int,
-      tm: Int,
-      em: Int): Int = {
+      tm: Boolean,
+      em: Boolean): Int = {
 
-    if(lastState.conversationState ==  2){
+    if (lastState.conversationState ==  2) {
       // If the conversation has already responded with two messages, then it is ready to be moved on.
-      if(pastStates.sortBy(_.messageId).length == 2){
+      if (pastStates.sortBy(_.messageId).length == 2) {
         1
-      }
-      else{
+      } else {
         2
       }
     }
-    else if(lastState.conversationState == 1)
-    {
-      if(topicCount == maxTopics && lastState.topicResponseCount > 3){
-        // Move on to the end
-        0
-      }
-      else if(em == 1){
-        // Stay in conversation state
-        0
-      }
-      else{
+    else if (lastState.conversationState == 1) {
+      if (topicCount == maxTopics && lastState.topicResponseCount > 3) {
+        0 // Move on to the end
+      } else if (em) {
+        0 // Stay in conversation state
+      } else {
         1
       }
-    }
-    else
-    {
+    } else {
       0
     }
   }
@@ -191,41 +179,30 @@ class UpdateState {
   private def troubleMode(
     lastState: ConversationState,
     ci: ClassifiedInput,
-    pastStates: List[ConversationState]): Int ={
+    pastStates: List[ConversationState]): Boolean ={
 
     val lengths = pastStates.map(_.lengthState)
     val count = pastStates.length
     val avgLength = lengths.sum / count
     val standardDev = Math.sqrt(lengths.map(l => (l - avgLength) * (l - avgLength)).sum / count)
 
-    if(lastState.troubleMode > 0){
+    if (lastState.troubleMode) {
       // already in trouble mode
       // check if they have gotten out or upgrade to escape
-      if(sentToLong(ci.sentiment) >= 0) {
-        0
-      }
-      else{
-        1
-      }
+      sentToLong(ci.sentiment) < 0
     }
-    else{
+    else {
       // not already in trouble mode
       // check to see if they deserve to be in
-      if(lastState.sentiment < 0){ // And the current state is negative, bam
+      if (lastState.sentiment < 0) { // And the current state is negative, bam
         // The user must be out of the start to be in trouble mode
-        if(count > 2){
-          if(lastState.lengthState > (avgLength + standardDev)){
-            1
-          } else {
-            0
-          }
+        if (count > 2) {
+          lastState.lengthState > (avgLength + standardDev)
+        } else {
+          false
         }
-        else{
-          0
-        }
-      }
-      else{
-        0
+      } else{
+        false
       }
     }
   }
@@ -246,18 +223,12 @@ class UpdateState {
     * @return
     */
   private def escapeMode(
-    pastStates: List[ConversationState],
-    lastState: ConversationState,
-    trouble: Int): Int = {
-
+      pastStates: List[ConversationState],
+      lastState: ConversationState,
+      trouble: Boolean): Boolean = {
     // if the the past message was in trouble and this one is in trouble, we in trouble
     val tmCount = pastStates.count(_.troubleMode == 1)
-    if(tmCount >= 2 && trouble == 1){
-      1
-    }
-    else{
-      0
-    }
+    tmCount >= 2 && trouble
   }
 
   /**
@@ -272,14 +243,11 @@ class UpdateState {
     * @return a long
     */
   private def sentToLong(s: Sentiment): Long = {
-    if(s.result == "Positive"){
+    if (s.result == "Positive") {
       1L
-    }
-    else if(s.result == "Neutral"){
+    } else if (s.result == "Neutral") {
       0L
-    }
-    else
-    {
+    } else {
       -1L
     }
   }
