@@ -17,13 +17,13 @@ package com.flashboomlet.data
   * @param tangent a flag for if the conversation has gone on a tangent from the original state
   * @param parentTopic a topic from which the tangent started
   */
-case class ConversationState (
+case class ConversationState(
   conversationId: Long,
   emotionalState: String,
   lengthState: Int,
   sentiment: Long,
   topic: String,
-  topics: Array[String],
+  topics: List[String],
   conversationState: Int,
   transitionState: Int,
   topicResponseCount: Int,

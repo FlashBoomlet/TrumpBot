@@ -40,7 +40,8 @@ lazy val trumpBotCore = (project in file ("trumpBotCore"))
       "org.scalaj" %% "scalaj-http" % "2.3.0",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.4",
       "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0",
-      "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models"
+      "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models",
+      "com.github.tototoshi" %% "scala-csv" % "1.3.3"
     )
   )
 

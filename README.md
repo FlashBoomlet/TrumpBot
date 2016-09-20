@@ -6,6 +6,19 @@
 * IntelliJ Scala plugin (via IntelliJ plugin installation interface)
 * JDK 8
 
+## Installation
+
+Before running please run the scripts:
+
+    > ./docker/install_sentiment_docker.sh
+
+## Running
+
+    > cd ./docker
+    > docker-compose up -d
+    > cd ..
+    > sbt run
+
 ## Loading project in IntelliJ for the first time
 
 1. Click file -> new project from existing sources
