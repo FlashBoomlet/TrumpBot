@@ -4,13 +4,14 @@ import com.flashboomlet.data.ConversationState
 import com.flashboomlet.data.Response
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
+import com.typesafe.scalalogging.LazyLogging
 
 /**
   * Created by ttlynch on 9/17/16.
   *
   * Conversation will select responses from the database and output a response
   */
-class Conversation {
+class Conversation extends LazyLogging {
 
   val db: MongoDatabaseDriver = new MongoDatabaseDriver()
   val stateMachine: UpdateState = new UpdateState()
@@ -29,8 +30,9 @@ class Conversation {
     val pastConversations = db.getConversationStates(id)
     // Current State of the Conversation
     val cs = stateMachine.updateState(ci)
+    logger.info(s"Conversation State: \n {}", cs.toString)
 
-    val response = if(cs.conversationState == 2){
+    val response = if(cs.conversationState == 0){
       // If the conversation State is triggered to be over then
       ConversationEnd(cs, pastConversations)
     }
