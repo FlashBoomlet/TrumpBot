@@ -5,6 +5,7 @@ import com.flashboomlet.preprocessing.ClassifiedInput
 import com.flashboomlet.preprocessing.FastSentimentClassifier
 import com.flashboomlet.preprocessing.NLPUtil
 import com.flashboomlet.preprocessing.naivebayes.WrappedClassifier
+import com.flashboomlet.selection.Conversation
 import com.typesafe.scalalogging.LazyLogging
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import io.scalac.slack.MessageEventBus
@@ -29,6 +30,10 @@ class TrumpBot(
 
   val MinuteInMillies = 60000
 
+  val convoSelector: Conversation = new Conversation()
+
+  val conversationId = 1
+
   /**
     * When A message is received in slack chat this method is called.
     *
@@ -45,10 +50,12 @@ class TrumpBot(
             NLPUtil.getAllTopics(classifierWrapper.topics, text)),
           nounsAndPronouns = NLPUtil.getNouns(text),
           wordCount = text.split(' ').length,
-          message = text
+          message = text,
+          messageId = Math.floor(dateTime.toDouble).toInt,
+          conversationId = conversationId
         )
         logger.info(s"Classified input: \n {}", classifiedInput.toString)
-        val response = ""//ResponseClient.getResponse(classifiedInput)
+        val response = convoSelector.GenerateResponse(classifiedInput)
         // 40 word per minute typing
         val responseDelay = MinuteInMillies * (response.split(' ').length / 40)
         Thread.sleep(responseDelay)

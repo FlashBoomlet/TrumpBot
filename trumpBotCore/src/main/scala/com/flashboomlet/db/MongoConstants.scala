@@ -36,8 +36,8 @@ trait MongoConstants {
     /* String constant for the `ConversationId` field in a MongoDB ConversationState document */
     final val ConversationId = "conversationid"
 
-    /* String constant for the `EmotionalState` field in a MongoDB ConversationState document */
-    final val EmotionalState = "emotionalstate"
+    /* String constant for the `ConversationId` field in a MongoDB ConversationState document */
+    final val MessageId = "messageid"
 
     /* String constant for the `LengthState` field in a MongoDB ConversationState document */
     final val LengthState = "lengthstate"
@@ -71,6 +71,15 @@ trait MongoConstants {
 
     /* String constant for the `ParentTopic` field in a MongoDB ConversationState document */
     final val ParentTopic = "parenttopic"
+
+    /* String constant for the `ParentTopic` field in a MongoDB ConversationState document */
+    final val Message = "message"
+
+    /* String constant for the `ParentTopic` field in a MongoDB ConversationState document */
+    final val ResponseMessage = "responsemessage"
+
+    /* String constant for the `ParentTopic` field in a MongoDB ConversationState document */
+    final val TangentCount = "tangentcount"
   }
 
 
