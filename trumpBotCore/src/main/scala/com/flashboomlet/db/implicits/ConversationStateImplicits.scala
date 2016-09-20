@@ -42,7 +42,7 @@ trait ConversationStateImplicits extends MongoConstants {
       val lengthState = doc.getAs[Int](ConversationStateConstants.LengthState).get
       val sentiment = doc.getAs[Long](ConversationStateConstants.Sentiment).get
       val topic = doc.getAs[String](ConversationStateConstants.Topic).get
-      val topics = doc.getAs[Array[String]](ConversationStateConstants.Topics).get
+      val topics = doc.getAs[List[String]](ConversationStateConstants.Topics).get
       val conversationState = doc.getAs[Int](ConversationStateConstants.ConversationState).get
       val transitionState = doc.getAs[Int](ConversationStateConstants.TransitionState).get
       val topicResponseCount = doc.getAs[Int](ConversationStateConstants.TopicResponseCount).get

@@ -17,20 +17,19 @@ class UpdateState {
     // if sub topics cannot be found and trouble mode fails, escape mode.
     // if the user is negative and not following in the conversation, escape mode. \
 
-    ConversationState(
-      conversationId = null,
-      emotionalState = null,
-      lengthState = null,
-      sentiment = null,
-      topic = null,
-      topics = null,
-      conversationState = null,
-      transitionState = null,
-      topicResponseCount = null,
-      troubleMode = null,
-      escapeMode = null,
-      tangent = null,
-      parentTopic = null
+    ConversationState(conversationId = 0,
+      emotionalState = "",
+      lengthState = 0,
+      sentiment = 0,
+      topic = "",
+      topics = List(),
+      conversationState = 0,
+      transitionState = 0,
+      topicResponseCount = 0,
+      troubleMode = 0,
+      escapeMode = 0,
+      tangent = 0,
+      parentTopic = ""
     )
   }
 

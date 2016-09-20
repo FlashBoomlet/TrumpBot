@@ -19,6 +19,13 @@ class TrumpBotBundle extends BotModules {
     * @param websocketClient websocket client to listen with
     */
   override def registerModules(context: ActorContext, websocketClient: ActorRef): Unit = {
-    context.actorOf(Props(classOf[TrumpBot], Driver.EventBus), "trumpBot")
+    context.actorOf(
+      Props(
+        classOf[TrumpBot],
+        Driver.EventBus,
+        Driver.Classifier,
+        Driver.objectMapper,
+        Driver.DefaultNLPClient),
+      "trumpBot")
   }
 }

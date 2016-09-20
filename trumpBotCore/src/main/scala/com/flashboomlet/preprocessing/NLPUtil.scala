@@ -17,13 +17,22 @@ import scala.annotation.tailrec
 object NLPUtil {
 
   /**
+    * Get all of the topics in a bayes-classifiable string.
+    * @param topics Topics of issues that responses are categorized under.
+    * @param text Text to search for topics in
+    * @return List of present topics
+    */
+  def getAllTopics(topics: List[String], text: String): List[String] =
+    topics.filter(text.contains)
+
+  /**
     * Given tome text, this function parses the nouns and pronouns from the text.
     *
     * @param text provided text
     * @param pipeline implicit NLP Client pipline configured to parse data
     * @return Seq of words that are nouns or pronouns.
     */
-  def getNouns(text: String)(implicit pipeline: StanfordCoreNLP): Seq[String] = {
+  def getNouns(text: String)(implicit pipeline: StanfordCoreNLP): List[String] = {
     val document = new Annotation(text)
     pipeline.annotate(document)
     val coreLabels: Seq[CoreLabel] = document.get(
@@ -32,7 +41,7 @@ object NLPUtil {
     accNouns(
       Seq(),
       coreLabels
-    )
+    ).toList
   }
 
   /**
