@@ -4,6 +4,7 @@ import com.flashboomlet.data.ConversationState
 import com.flashboomlet.data.Response
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
+import com.flashboomlet.preprocessing.Sentiment
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -32,15 +33,13 @@ class Conversation extends LazyLogging {
     val cs = stateMachine.updateState(ci)
     logger.info(s"Conversation State: \n {}", cs.toString)
 
-    val response = if(cs.conversationState == 0){
+    val response = if (cs.conversationState == 0) {
       // If the conversation State is triggered to be over then
       ConversationEnd(cs, pastConversations)
-    }
-    else if(cs.conversationState == 1){
+    } else if (cs.conversationState == 1) {
       // if the total amount of conversational topics of this conversation exceeds 5, leave exit mode.
       Conversation(cs, pastConversations)
-    }
-    else{
+    } else {
       ConversationStart(cs)
     }
 
@@ -60,18 +59,15 @@ class Conversation extends LazyLogging {
     * @return a response to the user
     */
   private def ConversationStart(cs: ConversationState): String = {
-    if(cs.topicResponseCount <= 1 ){
+    if (cs.topicResponseCount < 1 ) {
       "Hello, I am Donald J. Trump, the Republican Presidential Nominee. How are you doing?"
-    }
-    else{
+    } else {
       // update conversation state to get out of the start mode.
-      if(cs.sentiment < 0){
-        val response: String = "I am sorry to hear that. I am Making America Great Again! \n"
+      if (cs.sentimentClass == "Negative" && cs.sentimentConfidence > 51) {
+        val response: String = "I am sorry to hear that. I am Making America Great Again!"
         response + randomConversationStarter()
-      }
-      else
-      {
-        val response: String = "I am glad to hear that. I am Making America Great Again! \n"
+      } else {
+        val response: String = "I am glad to hear that. I am Making America Great Again!"
         response + randomConversationStarter()
       }
     }
@@ -87,25 +83,20 @@ class Conversation extends LazyLogging {
     cs: ConversationState,
     pastStates: List[ConversationState]): String = {
 
-    if(cs.transitionState != 0)
-    {
+    if (cs.transitionState) {
       randomConversationStarter()
-    }
-    else {
+    } else {
       // Select the response from the collection of responses that most closely matches a response
       // from the user.
-      if(cs.escapeMode == 1){ /* Order if these if's matters!!! */
+      if (cs.escapeMode) { /* Order if these if's matters!!! */
         em.escapeMode(cs)
-      }
-      else if(cs.troubleMode == 1){
+      } else if (cs.troubleMode) {
         tm.troubleMode(cs)
-      }
-      else{
+      } else {
         // If greater than 3 replies, then transition to a new topic.
-        val transition: String = if(cs.transitionState == 1){
-          "\nWhat other questions do you have for me? "
-        }
-        else{
+        val transition: String = if (cs.transitionState) {
+          " What other questions do you have for me?"
+        } else {
           ""
         }
         getResponse(cs, pastStates) + transition
@@ -128,29 +119,30 @@ class Conversation extends LazyLogging {
     val responses: List[Response] = db.getResponses()
     val topics = cs.topics
     // TODO: Insert code to get out if there is a canned trigger first
-    val respFiltered = responses.filter(_.topics == cs.topic)
+    val respFiltered = responses.filter(_.primaryTopic == cs.topic)
     val pastResponses = pastStates.map(_.responseMessage)
 
     val responsesWithSimilarity = respFiltered.map { r =>
       (
         r,
-        percentSimilar(topics, r.topics.toList),
+        percentSimilar(topics, r.topics),
         pastResponses
       )
     }
 
-    val positiveFlag = if(cs.sentiment < 0){0}else{1}
+    val positiveFlag: Boolean = cs.sentimentClass == "Positive"
 
     val validResponses = responsesWithSimilarity
       .filter(s => !s._3.contains(s._1.content))
-      .filter(s => s._1.positiveSentiment == positiveFlag )
+//      .filter(s => s._1.positiveSentiment == positiveFlag ) // TODO: This was causing problems
       .sortBy(_._2).reverse
 
-    if(validResponses.length < 1){
+    println(validResponses)
+
+    if (validResponses.length < 1) {
       // Well we messed up, time to leave
-      ConversationEnd(cs, pastStates)
-    }
-    else{
+      "Sorry, I'm not comfortable talking about that at the moment."
+    } else {
       validResponses.head._1.content
     }
     // TODO: Add logic to go on tangent and update tangent count
@@ -165,7 +157,7 @@ class Conversation extends LazyLogging {
     */
   private def percentSimilar(topics: List[String], responseTopics: List[String]): Double = {
     val len: Double = topics.length
-    responseTopics.map( r => (r, topics)).count( obj => obj._2.contains(obj._1))/len
+    responseTopics.map( r => (r, topics)).count( obj => obj._2.contains(obj._1)) / len
   }
 
   /**
@@ -176,37 +168,29 @@ class Conversation extends LazyLogging {
     * @return a response to send to the user
     */
   private def ConversationEnd(
-    cs: ConversationState,
-    pastStates: List[ConversationState]): String = {
+      cs: ConversationState,
+      pastStates: List[ConversationState]): String = {
 
     // Find average sentiment of the conversation by the other person to gage interest.
-    val lengths = pastStates.map(_.sentiment)
-    val count = pastStates.length
-    val avg = if(count != 0) {
-      lengths.sum / count
-    }
-    else{
-      0
-    }
+    val sentiments: List[(Long, String)] = pastStates.map(s =>
+      (s.sentimentConfidence, s.sentimentClass))
 
-    val sentThreshold = 0.5
+    val averageSentiment: Double = Util.calculateAverageSentiment(
+      (cs.sentimentConfidence, cs.sentimentClass) +: sentiments)
 
-    if(cs.sentiment < sentThreshold)
-    {
+    val sentThreshold = -0.5
+
+    if (averageSentiment < sentThreshold) {
       // escape mode
       em.escapeMode(cs)
-    }
-    else if(avg > sentThreshold)
-    {
+    } else if (averageSentiment > sentThreshold) {
       //    thank for support, ask for donation, tell them to preach the good word.
       val response: String = "Thank you for your support! I greatly appreciate it. Together we " +
-      "will will make America Great Again!\n\n If you would like to help out with my campaign, " +
+      "will will make America Great Again! If you would like to help out with my campaign, " +
       "the easiest way to get involved would be to go to https://www.donaldjtrump.com/ and " +
-      "make a donation. \n\n Together we will beat corrupt Hillary!"
+      "make a donation. Together we will beat corrupt Hillary!"
       response
-    }
-    else
-    {
+    } else {
       // leave in a civil manner. Refer them to the website to find out more details.
       val response: String = "I was a pleasure talking to you. I have an event I must attend so " +
       "I am signing off now. If you have any more questions please drop by my website. I have " +
@@ -225,7 +209,7 @@ class Conversation extends LazyLogging {
     * @return a random response from the database that has not be used prior.
     */
   private def randomConversationStarter(): String = {
-    "\nWhat questions do you have for me? "
+    " What questions do you have for me? "
   }
 
   /**
@@ -240,7 +224,8 @@ class Conversation extends LazyLogging {
       conversationId = cs.conversationId,
       messageId = cs.messageId,
       lengthState = cs.lengthState,
-      sentiment = cs.sentiment,
+      sentimentConfidence = cs.sentimentConfidence,
+      sentimentClass = cs.sentimentClass,
       topic = topic, // Change the topic
       topics = cs.topics,
       conversationState = cs.conversationState,
@@ -248,7 +233,7 @@ class Conversation extends LazyLogging {
       topicResponseCount = cs.topicResponseCount,
       troubleMode = cs.troubleMode,
       escapeMode = cs.escapeMode,
-      tangent = 1, // set to 1
+      tangent = true, // set to 1
       parentTopic = cs.topic, // Change the topic
       message = cs.message,
       responseMessage = cs.responseMessage,
@@ -268,7 +253,8 @@ class Conversation extends LazyLogging {
       conversationId = cs.conversationId,
       messageId = cs.messageId,
       lengthState = cs.lengthState,
-      sentiment = cs.sentiment,
+      sentimentConfidence = cs.sentimentConfidence,
+      sentimentClass = cs.sentimentClass,
       topic = cs.topic,
       topics = cs.topics,
       conversationState = cs.conversationState,

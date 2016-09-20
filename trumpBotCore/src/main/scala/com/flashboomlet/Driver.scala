@@ -6,7 +6,6 @@ import bot.TrumpBotBundle
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.flashboomlet.bot.SlackConfig
 import com.flashboomlet.data.ResponsePropogator
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.NLPClientFactory
@@ -21,6 +20,7 @@ import io.scalac.slack.websockets.WebSocket
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Driver for the TrumpBot. Contains entry point
@@ -43,6 +43,7 @@ object Driver extends Shutdownable {
     * @param args command-line arguments
     */
   def main(args: Array[String]) {
+    DatabaseDriver.db.drop()
     ResponsePropogator.populateResponses(DatabaseDriver)
     try {
       SlackBot ! Start

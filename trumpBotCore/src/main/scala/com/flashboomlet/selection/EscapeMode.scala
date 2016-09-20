@@ -20,8 +20,7 @@ class EscapeMode {
     * @return a canned response to leave the conversation
     */
   def escapeMode(cs: ConversationState): String = {
-
-    if(cs.topicResponseCount == 1){
+    if (cs.topicResponseCount == 1) {
       // Make them feel like trash
       // Could select from a list of them
       val response: String = "Since you don't seem to care about any real issues, you might " +
@@ -29,18 +28,17 @@ class EscapeMode {
       "and all you want to do is dick around. Find yourself a bimbo and dick around with them." +
       " Seemed to work for Bill."
       response
-    }
-    else if(cs.topicResponseCount == 2){
+    } else if (cs.topicResponseCount == 2) {
       // canned response to completely end the conversation:
       val response: String = "Like I said, go find yourself a bimbo. I am done wasting my time " +
       "with people like you. And let me tell you, it is people like you, ruining America!!!! " +
       " I am trying to Make America Great Again and it is people like you that are ruining her " +
       " I am done with this conversation."
       response
-    }
-    else
-    {
+    } else if (cs.topicResponseCount > 2) {
       "I am done with this conversation."
+    } else {
+      ""
     }
   }
 

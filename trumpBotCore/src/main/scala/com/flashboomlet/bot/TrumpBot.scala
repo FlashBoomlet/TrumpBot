@@ -30,7 +30,7 @@ class TrumpBot(
 
   val UserId: String = "U2CRTV145"
 
-  val MinuteInMillies = 60000
+  val MinuteInMillies = 60000D
 
   val convoSelector: Conversation = new Conversation()
 
@@ -58,10 +58,13 @@ class TrumpBot(
           conversationId = conversationId
         )
         logger.info(s"Classified input: \n {}", classifiedInput.toString)
-        val response = convoSelector.GenerateResponse(classifiedInput)
+        val response: String = convoSelector.GenerateResponse(classifiedInput).replace('\n', ' ')
         // 40 word per minute typing
-        val responseDelay = MinuteInMillies * (response.split(' ').length / 200)
-        Thread.sleep(responseDelay)
+//        val responseDelay = MinuteInMillies * (response.split(' ').length / 200D)
+//        println(responseDelay)
+//        println(responseDelay/60000D)
+//        println(response)
+//        Thread.sleep(responseDelay.toInt)
         // free to use classified input here
         publish(OutboundMessage(channel, response)) // Send message
       }

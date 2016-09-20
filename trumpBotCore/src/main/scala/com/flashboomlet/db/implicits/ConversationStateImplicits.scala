@@ -3,6 +3,7 @@ package com.flashboomlet.db.implicits
 import _root_.reactivemongo.bson.BSONInteger
 import com.flashboomlet.data.ConversationState
 import com.flashboomlet.db.MongoConstants
+import reactivemongo.bson.BSONBoolean
 import reactivemongo.bson.BSONDocument
 import reactivemongo.bson.BSONDocumentReader
 import reactivemongo.bson.BSONDocumentWriter
@@ -19,15 +20,16 @@ trait ConversationStateImplicits extends MongoConstants {
       ConversationStateConstants.ConversationId -> BSONLong(cs.conversationId),
       ConversationStateConstants.MessageId -> BSONInteger(cs.messageId),
       ConversationStateConstants.LengthState -> BSONInteger(cs.lengthState),
-      ConversationStateConstants.Sentiment -> BSONLong(cs.sentiment),
+      ConversationStateConstants.SentimentConfidence -> BSONLong(cs.sentimentConfidence),
+      ConversationStateConstants.SentimentClass -> BSONString(cs.sentimentClass),
       ConversationStateConstants.Topic -> BSONString(cs.topic),
       ConversationStateConstants.Topics -> cs.topic,
       ConversationStateConstants.ConversationState -> BSONInteger(cs.conversationState),
-      ConversationStateConstants.TransitionState -> BSONInteger(cs.transitionState),
+      ConversationStateConstants.TransitionState -> BSONBoolean(cs.transitionState),
       ConversationStateConstants.TopicResponseCount -> BSONInteger(cs.topicResponseCount),
-      ConversationStateConstants.TroubleMode -> BSONInteger(cs.troubleMode),
-      ConversationStateConstants.EscapeMode -> BSONInteger(cs.escapeMode),
-      ConversationStateConstants.Tangent -> BSONInteger(cs.tangent),
+      ConversationStateConstants.TroubleMode -> BSONBoolean(cs.troubleMode),
+      ConversationStateConstants.EscapeMode -> BSONBoolean(cs.escapeMode),
+      ConversationStateConstants.Tangent -> BSONBoolean(cs.tangent),
       ConversationStateConstants.ParentTopic -> BSONString(cs.parentTopic),
       ConversationStateConstants.Message -> BSONString(cs.message),
       ConversationStateConstants.ResponseMessage -> BSONString(cs.responseMessage),
@@ -43,15 +45,16 @@ trait ConversationStateImplicits extends MongoConstants {
       val conversationId = doc.getAs[Long](ConversationStateConstants.ConversationId).get
       val messageId = doc.getAs[Int](ConversationStateConstants.MessageId).get
       val lengthState = doc.getAs[Int](ConversationStateConstants.LengthState).get
-      val sentiment = doc.getAs[Long](ConversationStateConstants.Sentiment).get
+      val sentimentConf = doc.getAs[Long](ConversationStateConstants.SentimentConfidence).get
+      val sentimentClass = doc.getAs[String](ConversationStateConstants.SentimentClass).get
       val topic = doc.getAs[String](ConversationStateConstants.Topic).get
       val topics = doc.getAs[List[String]](ConversationStateConstants.Topics).getOrElse(List())
       val conversationState = doc.getAs[Int](ConversationStateConstants.ConversationState).get
-      val transitionState = doc.getAs[Int](ConversationStateConstants.TransitionState).get
+      val transitionState = doc.getAs[Boolean](ConversationStateConstants.TransitionState).get
       val topicResponseCount = doc.getAs[Int](ConversationStateConstants.TopicResponseCount).get
-      val troubleMode = doc.getAs[Int](ConversationStateConstants.TroubleMode).get
-      val escapeMode = doc.getAs[Int](ConversationStateConstants.EscapeMode).get
-      val tangent = doc.getAs[Int](ConversationStateConstants.Tangent).get
+      val troubleMode = doc.getAs[Boolean](ConversationStateConstants.TroubleMode).get
+      val escapeMode = doc.getAs[Boolean](ConversationStateConstants.EscapeMode).get
+      val tangent = doc.getAs[Boolean](ConversationStateConstants.Tangent).get
       val parentTopic = doc.getAs[String](ConversationStateConstants.ParentTopic).get
       val message = doc.getAs[String](ConversationStateConstants.Message).get
       val responseMessage = doc.getAs[String](ConversationStateConstants.ResponseMessage).get
@@ -62,7 +65,8 @@ trait ConversationStateImplicits extends MongoConstants {
         conversationId = conversationId,
         messageId = messageId,
         lengthState = lengthState,
-        sentiment = sentiment,
+        sentimentConfidence = sentimentConf,
+        sentimentClass = sentimentClass,
         topic = topic,
         topics = topics,
         conversationState = conversationState,

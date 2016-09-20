@@ -6,7 +6,7 @@ package com.flashboomlet.data
   * @param conversationId the id of the conversation (this id should never change and should stay the same for that conversation)
   * @param messageId the id of the message that corresponds to the current state
   * @param lengthState the length the message within the conversation (the number of calculaterd words)
-  * @param sentiment the sentiment of the conversation
+  * @param sentimentConfidence the sentiment of the conversation
   * @param topic the topic of the conversation
   * @param topics the topics/nouns of the conversation
   * @param conversationState the conversation state of whether is is a question or statement (2, Start, 1 Conversation, 0 end)
@@ -24,15 +24,16 @@ case class ConversationState(
   conversationId: Long,
   messageId: Int,
   lengthState: Int,
-  sentiment: Long,
+  sentimentConfidence: Long,
+  sentimentClass: String,
   topic: String,
   topics: List[String],
   conversationState: Int,
-  transitionState: Int,
+  transitionState: Boolean,
   topicResponseCount: Int,
-  troubleMode: Int,
-  escapeMode: Int,
-  tangent: Int,
+  troubleMode: Boolean,
+  escapeMode: Boolean,
+  tangent: Boolean,
   parentTopic: String,
   message: String,
   responseMessage: String,
