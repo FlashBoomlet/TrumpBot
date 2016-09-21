@@ -21,20 +21,19 @@ import io.scalac.slack.common.OutboundMessage
   * @param bus Message event bus used for listening to specific events
   */
 class TrumpBot(
-              override val bus: MessageEventBus,
-              implicit val classifierWrapper: WrappedClassifier,
-              implicit val objectMapper: ObjectMapper,
-              implicit val pipeline: StanfordCoreNLP,
-              val databaseDriver: MongoDatabaseDriver)
+    override val bus: MessageEventBus,
+    implicit val classifierWrapper: WrappedClassifier,
+    implicit val objectMapper: ObjectMapper,
+    implicit val pipeline: StanfordCoreNLP,
+    val databaseDriver: MongoDatabaseDriver)
     extends IncomingMessageListener with LazyLogging {
 
   val UserId: String = "U2CRTV145"
 
-  val MinuteInMillies = 60000D
 
   val convoSelector: Conversation = new Conversation()
 
-  val conversationId = 1
+  var conversationId = 1
 
   /**
     * When A message is received in slack chat this method is called.
@@ -44,29 +43,26 @@ class TrumpBot(
   def receive: Receive = {
     case bm@BaseMessage(text, channel, user, dateTime, edited) =>
       if (UserId != user) {
-        val lowercase = text.toLowerCase()
-        val primaryTopic = classifierWrapper.classifier.classify(text)
-        val classifiedInput = ClassifiedInput(
-          sentiment = FastSentimentClassifier.getSentiment(text),
-          primaryTopic = primaryTopic,
-          allTopics = prependPrimaryTopicToAll(primaryTopic,
-            NLPUtil.getAllTopics(classifierWrapper.topics, text)),
-          nounsAndPronouns = NLPUtil.getNouns(text),
-          wordCount = text.split(' ').length,
-          message = lowercase,
-          messageId = Math.floor(dateTime.toDouble).toInt,
-          conversationId = conversationId
-        )
-        logger.info(s"Classified input: \n {}", classifiedInput.toString)
-        val response: String = convoSelector.GenerateResponse(classifiedInput).replace('\n', ' ')
-        // 40 word per minute typing
-//        val responseDelay = MinuteInMillies * (response.split(' ').length / 200D)
-//        println(responseDelay)
-//        println(responseDelay/60000D)
-//        println(response)
-//        Thread.sleep(responseDelay.toInt)
-        // free to use classified input here
-        publish(OutboundMessage(channel, response)) // Send message
+        if (text.startsWith("$restart")) {
+         conversationId += 1
+        } else {
+          val lowercase = text.toLowerCase()
+          val primaryTopic = classifierWrapper.classifier.classify(text)
+          val classifiedInput = ClassifiedInput(
+            sentiment = FastSentimentClassifier.getSentiment(text),
+            primaryTopic = primaryTopic,
+            allTopics = prependPrimaryTopicToAll(primaryTopic,
+              NLPUtil.getAllTopics(classifierWrapper.topics, text)),
+            nounsAndPronouns = NLPUtil.getNouns(text),
+            wordCount = text.split(' ').length,
+            message = lowercase,
+            messageId = Math.floor(dateTime.toDouble).toInt,
+            conversationId = conversationId
+          )
+          logger.info(s"Classified input: \n {}", classifiedInput.toString)
+          val response: String = convoSelector.GenerateResponse(classifiedInput).replace('\n', ' ')
+          publish(OutboundMessage(channel, response)) // Send message
+        }
       }
     case _ => ()
   }

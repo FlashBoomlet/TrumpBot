@@ -237,15 +237,21 @@ class UpdateState {
     val avgLength = lengths.sum / count
     val standardDev = Math.sqrt(lengths.map(l => (l - avgLength) * (l - avgLength)).sum / count)
 
+    val adHominems = List(" you.", "you ", "you're", "donald", "trump", "sexist", "nationalist",
+      "fascist",  "racist", "mysoginist", "homophob", "islamophob", "xeno", " hate")
+
     if (lastState.troubleMode) {
       // already in trouble mode
       // check if they have gotten out or upgrade to escape
       ci.sentiment.result == "Negative" &&
-        math.ceil(ci.sentiment.confidence.toDouble).toLong > tmThreshold
+        (math.ceil(ci.sentiment.confidence.toDouble).toLong > tmThreshold) &&
+        adHominems.exists( a => ci.message.toLowerCase().contains(a))
     } else {
       // not already in trouble mode
       // check to see if they deserve to be in
-      if (lastState.sentimentClass == "Negative" && lastState.sentimentConfidence > tmThreshold) {
+      if (lastState.sentimentClass == "Negative" &&
+          lastState.sentimentConfidence > tmThreshold &&
+          adHominems.exists( a => ci.message.contains(a))) {
         // And the current state is negative, bam
         // The user must be out of the start to be in trouble mode
         if (count > 2) {
