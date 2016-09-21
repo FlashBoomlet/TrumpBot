@@ -4,7 +4,6 @@ import com.flashboomlet.data.ConversationState
 import com.flashboomlet.data.Response
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
-import com.flashboomlet.preprocessing.Sentiment
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -18,6 +17,7 @@ class Conversation extends LazyLogging {
   val stateMachine: UpdateState = new UpdateState()
   val em: EscapeMode = new EscapeMode()
   val tm: TroubleMode = new TroubleMode()
+  val r = scala.util.Random
 
   /**
     * Generate Response is a request from the user for a response.
@@ -64,11 +64,11 @@ class Conversation extends LazyLogging {
     } else {
       // update conversation state to get out of the start mode.
       if (cs.sentimentClass == "Negative" && cs.sentimentConfidence > 51) {
-        val response: String = "I am sorry to hear that. I am Making America Great Again!"
-        response + randomConversationStarter()
+        val response: String = "I am Making America Great Again!"
+        response + " What questions can I answer for you today?"
       } else {
         val response: String = "I am glad to hear that. I am Making America Great Again!"
-        response + randomConversationStarter()
+        response + " What questions can I answer for you today?"
       }
     }
   }
@@ -88,13 +88,15 @@ class Conversation extends LazyLogging {
     } else {
       // Select the response from the collection of responses that most closely matches a response
       // from the user.
-      if (cs.escapeMode) { /* Order if these if's matters!!! */
+      if (cs.escapeMode) { /* Order of these if's matters!!! */
         em.escapeMode(cs)
       } else if (cs.troubleMode) {
         tm.troubleMode(cs)
       } else {
         // If greater than 3 replies, then transition to a new topic.
         val transition: String = if (cs.transitionState) {
+        // TODO: Implement a transition trigger lol
+          // Conversation State can lead to a bomb transition
           " What other questions do you have for me?"
         } else {
           ""
@@ -119,33 +121,46 @@ class Conversation extends LazyLogging {
     val responses: List[Response] = db.getResponses()
     val topics = cs.topics
     // TODO: Insert code to get out if there is a canned trigger first
-    val respFiltered = responses.filter(_.primaryTopic == cs.topic)
-    val pastResponses = pastStates.map(_.responseMessage)
+    val cannedList = responses.filter(s => cs.message.contains(s.cannedTrigger))
+    if(cannedList.nonEmpty) {
+      // We have a canned trigger to fire off!
+      cannedList.head.content
+    }
+    else {
+      val respFiltered = responses.filter(_.primaryTopic == cs.topic)
+      val pastResponses = pastStates.map(_.responseMessage)
 
-    val responsesWithSimilarity = respFiltered.map { r =>
-      (
+      val responsesWithSimilarity = respFiltered.map { r =>
+        (
         r,
         percentSimilar(topics, r.topics),
         pastResponses
-      )
-    }
+        )
+      }
 
-    val positiveFlag: Boolean = cs.sentimentClass == "Positive"
+      val positiveFlag: Boolean = cs.sentimentClass == "Positive"
 
-    val validResponses = responsesWithSimilarity
+      val validResponses = responsesWithSimilarity
       .filter(s => !s._3.contains(s._1.content))
-//      .filter(s => s._1.positiveSentiment == positiveFlag ) // TODO: This was causing problems
       .sortBy(_._2).reverse
 
-    println(validResponses)
+      println(validResponses)
 
-    if (validResponses.length < 1) {
-      // Well we messed up, time to leave
-      "Sorry, I'm not comfortable talking about that at the moment."
-    } else {
-      validResponses.head._1.content
+      if (validResponses.length < 1) {
+        // Well we messed up, time to leave
+
+        val randomTopic = selectRandomTopic()
+        val takeTwo = responses.filter(_.primaryTopic == randomTopic)
+        if (takeTwo.nonEmpty) {
+          takeTwo.head.content
+        }
+        else {
+          ConversationEnd(cs, pastStates)
+        }
+      } else {
+        validResponses.head._1.content
+      }
     }
-    // TODO: Add logic to go on tangent and update tangent count
   }
 
   /**
@@ -209,36 +224,7 @@ class Conversation extends LazyLogging {
     * @return a random response from the database that has not be used prior.
     */
   private def randomConversationStarter(): String = {
-    " What questions do you have for me? "
-  }
-
-  /**
-    * Update Tangent Count will update the conversation state if it is going into a tangent
-    *
-    * @param cs the current conversation state
-    * @param topic the topic that will be the new tangent
-    * @return an updated conversation state
-    */
-  private def updateTangentCount(cs: ConversationState, topic: String): ConversationState = {
-    ConversationState(
-      conversationId = cs.conversationId,
-      messageId = cs.messageId,
-      lengthState = cs.lengthState,
-      sentimentConfidence = cs.sentimentConfidence,
-      sentimentClass = cs.sentimentClass,
-      topic = topic, // Change the topic
-      topics = cs.topics,
-      conversationState = cs.conversationState,
-      transitionState = cs.transitionState,
-      topicResponseCount = cs.topicResponseCount,
-      troubleMode = cs.troubleMode,
-      escapeMode = cs.escapeMode,
-      tangent = true, // set to 1
-      parentTopic = cs.topic, // Change the topic
-      message = cs.message,
-      responseMessage = cs.responseMessage,
-      tangentCount = cs.tangentCount + 1 // Increment the tangent count
-    )
+    " You bring up a lot of great points. Thank you for sharing! "
   }
 
   /**
@@ -268,5 +254,36 @@ class Conversation extends LazyLogging {
       responseMessage = msg,
       tangentCount = cs.tangentCount
     )
+  }
+
+  /**
+    * Select Random Topic Randomly selects a topic or sub topic from the database of
+    * known responses.
+    *
+    * @return a random topic from the response database
+    */
+  def selectRandomTopic(): String = {
+    // TODO: Update this list with topic changes if need be
+    val topics = List(
+      "wall",
+      "terrorism" ,
+      "china" ,
+      "taxes" ,
+      "children" ,
+      "immigration" ,
+      "trade" ,
+      "police" ,
+      "guns" ,
+      "education" ,
+      "jobs" ,
+      "myself",
+      "Crooked Hillary",
+      "abortion",
+      "health care",
+      "foreign policy")
+
+    val len = topics.length
+    val i = r.nextInt(len)
+    topics(i)
   }
 }

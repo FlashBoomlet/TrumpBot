@@ -33,8 +33,9 @@ class TroubleMode {
     * @return a random topic from the response database
     */
   def selectRandomTopic(): String = {
+    // TODO: Update this list when the list changes
     val topics = List(
-      "the wall",
+      "wall",
       "terrorism" ,
       "china" ,
       "taxes" ,
@@ -45,10 +46,6 @@ class TroubleMode {
       "guns" ,
       "education" ,
       "jobs" ,
-      "Ivanka" ,
-      "Melania",
-      "Eric Trump",
-      "Donald Trump Jr.",
       "myself",
       "Crooked Hillary",
       "abortion",
