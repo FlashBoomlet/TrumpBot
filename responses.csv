@@ -1,7 +1,7 @@
 "content"~"cannedTrigger"~"conversationState"~"transitional"~"positiveSentiment"~"negativeSentiment"~"primaryTopic"~"tangentTopic"~"topics"~"partOfTopic"
-"They're bringing drugs, they're bringing crime, they're rapists"~~1~1~0~1~"immigration"~"wall"~"immigration,wall,guns,police"~
-"I'm pro-life"~"what is your stance on abortion"~1~0~1~1~"abortion"~"children"~"abortion,children"~
-"Planned Parenthood has to stop with the abortions"~~1~1~1~1~"abortion"~"children"~"abortion,children,taxes"~
+"They're bringing drugs, they're bringing crime, they're rapists."~~1~1~0~1~"immigration"~"wall"~"immigration,wall,guns,police"~
+"I'm pro-life."~"what is your stance on abortion"~1~0~1~1~"abortion"~"children"~"abortion,children"~
+"Planned Parenthood has to stop with the abortions."~~1~1~1~1~"abortion"~"children"~"abortion,children,taxes"~
 "Democrats want to confiscate all guns, which is a dumb idea because only the law-abiding citizens would turn in their guns and the bad guys would be the only ones left armed!"~~1~0~1~1~"guns"~"terrorism"~"immigration,guns,police,terrorism"~
 "We need to protect our Second Amendment right! If we don't , we won't have a country left folks!"~~1~0~1~0~"guns"~"terrorism"~"guns,terrorism,immigration,police"~
 "Obamacare. We're going to repeal it, we're going to replace it, get something great. Repeal it, replace it, get something great!"~~1~0~1~1~"healthcare"~"taxes"~"healthcare,taxes,children"~
@@ -13,20 +13,23 @@
 "We must maintain law and order at the highest level or we will cease to have a country. Our police don't get the respect they deserve."~~1~0~1~0~"police"~"terrorism"~"police,terrorism,immigration"~
 "I've said it time and time again, and let me tell you, the police are absolutely mistreated and misunderstood!"~~1~1~0~1~"police"~"immigration"~"police,terrorism,immigration"~
 "I believe in clean air, immaculate air, but I think climate change is a load of trash. We can't afford to shut our factories down."~~1~0~1~1~"jobs"~"china"~"jobs,china"~
-"Students in college -- they're doing well but they've got student loans up to the neck."~~1~0~1~0~"education"~"jobs"~"education,jobs,trade"~
+"Young adults are  in college -- they're doing well but they've got student loans up to the neck. They're swimming in these loans,
+"~~1~0~1~0~"education"~"jobs"~"education,jobs,trade"~
 "Student loans are probably one of the only things that the government shouldn't make money from and yet it does"~~1~0~1~0~"education"~"jobs"~"education,jobs,taxes"~
 "Nothing is more important than higher education and education in general. Our youth is our best chance at Making America Great Again!"~~1~0~0~1~"education"~"jobs"~"education,jobs,trade"~
 "The fact is that we need unpredictability when dealing with other countries."~~1~0~1~0~"foreignpolicy"~"clinton"~"trade,clinton,immigration,terrorism"~
 "We need much tougher, much smarter leadership - and we need it NOW!"~~1~0~1~0~"clinton"~"character"~"clinton,character,trade,terrorism"~
 "We have to have a strong military, and let me tell you, NOBODY is going to mess with us. We won't even have to use it."~~1~0~1~0~"foreignpolicy"~"terrorism"~"foreignpolicy,terrorism,clinton"~
 "I'm in favor of nuclear energy, very strongly in favor of nuclear energy; there's a yuge amount of jobs and it's a growing industry."~~1~0~1~0~"jobs"~"education"~"jobs,education,taxes,trade,foreignpolicy"~
-"YUUUUUUGE"~"how big is the wall going to be "~1~1~1~0~"none"~"none"~"none"~
+"YUUUUUGE!!!"~"make the wall"~1~0~1~0~"wall"~"immigration"~"wall,immigration,foreignpolicy,trade"~
+"YUUUUUUGE!!!"~"how big is the wall going to be "~1~1~1~0~"none"~"none"~"none"~
 "Make America Great Again!"~"murica"~1~1~1~0~"wall"~"character"~"wall,character,foreignpolicy"~
-"Queens, New York"~"where are you from"~1~0~0~0~"none"~"character"~"none"~
-"I live in Manhattan"~"where do you live"~1~0~0~0~"none"~"character"~"none"~
-"I am 70 years old"~"how old are you"~1~0~0~0~"none"~"character"~"none"~
-"My birthday is June 14th"~"when is your birthday"~1~0~0~0~"none"~"character"~"none"~
-"I was born in 1946"~"when were you born"~1~0~0~0~"none"~"character"~"none"~
+"Queens, New York."~"where are you from"~1~0~0~0~"none"~"character"~"none"~
+"I live in Manhattan."~"where do you live"~1~0~0~0~"none"~"character"~"none"~
+"I am 70 years old."~"how old are you"~1~0~0~0~"none"~"character"~"none"~
+"My birthday is June 14th."~"when is your birthday"~1~0~0~0~"none"~"character"~"none"~
+"Queens, New York."~"where were you born"~1~0~1~0~"none"~"none"~"none"~
+"I was born in 1946."~"when were you born"~1~0~0~0~"none"~"character"~"none"~
 "As has been stated continuously in the press, people are pouring across our borders unabated."~~1~0~0~1~"immigration"~"terrorism"~"immigration,terrorism,foreignpolicy,jobs"~
 "Public reports routinely state great amounts of crime are being committed by illegal immigrants."~~1~0~0~1~"immigration"~"police"~"immigraion,police,terrorism,foreignpolicy"~
 "We're going to build the wall, and we're going to stop it."~~1~0~1~0~"wall"~"immigration"~"wall,immigration,terrorism,jobs,foreignpolicy"~
@@ -34,39 +37,73 @@
 "For many years, Mexico's leaders have been taking advantage of the United States by using illegal immigration to export the crime and poverty in their own country."~~1~0~0~1~"wall"~"immigration"~"wall,immigration,foreignpolicy,police"~
 "A nation without borders is not a nation."~~1~0~0~0~"wall"~"terrorism"~"wall,immigration,foreignpolicy,children"~
 "We cannot allow illegal immigrants to pour into our country. They are pouring in by the tens of thousands!"~~1~0~0~1~"wall"~"immigration"~"wall,immigration,jobs,foreignpolicy"~
-"I'm not supporting Planned Parenthood"~~1~0~1~1~"abortion"~"healthcare"~"abortion,healthcare,taxes"~
-"The right of self-defense doesn't stop at the end of your driveway. That's why I have a concealed carry permit and why tens of millions of Americans do too. That permit should be valid in all 50 states"~~1~0~1~0~"guns"~"terrorism"~"terrorism,guns,police,wall,immigration"~
-"I support the ban on assault weapons and I support slightly longer waiting periods to purchase a gun"~~1~0~0~0~"guns"~"terrorism"~"guns,terrorism"~
-"It's not a gun problem, it's a mental illness problem"~~1~0~0~0~"guns"~"healthcare"~"guns,healthcare,clinton,terrorism"~
-"You have the constitutional right to keep and bear arms"~~1~0~1~0~"guns"~"guns"~"guns"~
-"I don't want people coming in from the terror countries"~~1~0~1~0~"terrorism"~"immigration"~"terrorism,guns,police,wall,immigration"~
+"I'm not supporting Planned Parenthood."~~1~0~1~1~"abortion"~"healthcare"~"abortion,healthcare,taxes"~
+"The right of self-defense doesn't stop at the end of your driveway. That's why I have a concealed carry permit and why tens of millions of Americans do too. That permit should be valid in all 50 states."~~1~0~1~0~"guns"~"terrorism"~"terrorism,guns,police,wall,immigration"~
+"I support the ban on assault weapons and I support slightly longer waiting periods to purchase a gun."~~1~0~0~0~"guns"~"terrorism"~"guns,terrorism"~
+"It's not a gun problem, it's a mental illness problem."~~1~0~0~0~"guns"~"healthcare"~"guns,healthcare,clinton,terrorism"~
+"You have the constitutional right to keep and bear arms."~~1~0~1~0~"guns"~"guns"~"guns"~
+"I don't want people coming in from the terror countries."~~1~0~1~0~"terrorism"~"immigration"~"terrorism,guns,police,wall,immigration"~
 "We will totally dismantle Iran's global terror network. It wall happen so fast your head will spin."~~1~0~1~0~"terrorism"~"foreignpolicy"~"terrorism,foreignpolicy,clinton"~
-"We will send a clear signal that there is no daylight between America and our most reliable ally -- the state of Israel"~~1~0~1~0~"foreignpolicy"~"terrorism"~"foreignpolicy,terrorism,clinton"~
+"We will send a clear signal that there is no daylight between America and our most reliable ally -- the state of Israel."~~1~0~1~0~"foreignpolicy"~"terrorism"~"foreignpolicy,terrorism,clinton"~
 "The continuing incitement and preaching of hate by the Palestinian leadership, and the glorification of terror must end immediately."~~1~0~0~0~"terrorism"~"foreignpolicy"~"terrorism,foreignpolicy,clinton"~
 "We will never enter into any conflict unless it makes us safer as a nation, you cant trust me on that. I work for you, the American people."~~1~0~0~0~"foreignpolicy"~"terrorism"~"foreignpolicy,terrorism,wall"~
 "I will quickly and decisively bomb the hell out of ISIS, will rebuild our military and make it so strong no one -- and I mean, no one -- will mess with us."~~1~0~0~0~"terrorism"~"foreignpolicy"~"terrorism,foreignpolicy,wall"~
 "I want other countries to get on the ground fighting ISIS."~~1~0~0~0~"terrorism"~"foreignpolicy"~"terrorism,foreignpolicy"~
-"We need to protect all Americans, of all backgrounds and all beliefs, from Radical Islamic Terrorism - which has no place in an open and tolerant society"~~1~0~1~0~"terrorism"~"police"~"terrorism,police,clinton"~
-"Look, we are at war with these people and they don't wear uniforms"~~1~1~0~0~"terrorism"~"terrorism"~"terrorism"~
+"We need to protect all Americans, of all backgrounds and all beliefs, from Radical Islamic Terrorism - which has no place in an open and tolerant society."~~1~0~1~0~"terrorism"~"police"~"terrorism,police,clinton"~
+"Look, we are at war with these people and they don't wear uniforms."~~1~1~0~0~"terrorism"~"terrorism"~"terrorism"~
 "I try and pay as little tax as possible, because I hate what they do with my tax money."~~1~0~1~0~"taxes"~"trade"~"taxes,trade,character"~
-"I'm not talking about a tax increase. I'm talking about a tremendous tax decrease"~~1~0~1~0~"taxes"~"education"~"taxes,education,trade,clinton"~
+"I'm not talking about a tax increase. I'm talking about a tremendous tax decrease."~~1~0~1~0~"taxes"~"education"~"taxes,education,trade,clinton"~
 "We're lowering taxes very substantially and we're going to be getting rid of a tremendous amount of regulations."~~1~0~1~0~"taxes"~"jobs"~"taxes,jobs,china,trade"~
-"We will bring a lot of additional companies in because our tax rates are going way down"~~1~0~1~0~"jobs"~"taxes"~"jobs,taxes,wall,china"~
-"If you make $200 million a year you pay 10 percent, you're paying very little relatively to somebody that's making $50,000 a year and has to hire H&R Block because it's so complicated"~~1~0~1~0~"taxes"~"character"~"taxes,character,clinton"~
-"A lot of families go through hell over the death tax"~~1~1~0~0~"taxes"~"healthcare"~"taxes,healthcare"~
-"I would end Obamacare and replace it with something terrific, for far less money for the country and for the people"~~1~0~0~0~"healthcare"~"taxes"~"healthcare,taxes,children"~
-"We're going to eliminate job-killing regulations"~~1~0~1~0~"jobs"~"china"~"jobs,china,taxes,character"~
+"We will bring a lot of additional companies in because our tax rates are going way down."~~1~0~1~0~"jobs"~"taxes"~"jobs,taxes,wall,china"~
+"If you make $200 million a year you pay 10 percent, you're paying very little relatively to somebody that's making $50,000 a year and has to hire H&R Block because it's so complicated."~~1~0~1~0~"taxes"~"character"~"taxes,character,clinton"~
+"A lot of families go through hell over the death tax."~~1~1~0~0~"taxes"~"healthcare"~"taxes,healthcare"~
+"I would end Obamacare and replace it with something terrific, for far less money for the country and for the people."~~1~0~0~0~"healthcare"~"taxes"~"healthcare,taxes,children"~
+"We're going to eliminate job-killing regulations."~~1~0~1~0~"jobs"~"china"~"jobs,china,taxes,character"~
 "It makes it very hard for bankers to loan money for people to create jobs, for people with businesses to create jobs. And that has to stop, and it has to stop now."~~1~0~0~0~"jobs"~"education"~"jobs, education, trade"~
-"Other people are taking your jobs, and jobs are disappearing, they're going to other countries"~~1~0~0~0~"jobs"~"china"~"jobs,china,education,foreignpolicy,immigration"~
+"Other people are taking your jobs, and jobs are disappearing, they're going to other countries."~~1~0~0~0~"jobs"~"china"~"jobs,china,education,foreignpolicy,immigration"~
 "Any future regulation will go through a simple test: Is this regulation good for the American worker?"~~1~0~0~0~"jobs"~"immigration"~"jobs,character"~
-"This country is dying. And our workers are losing their jobs"~~1~1~0~0~"jobs"~"immigration"~"jobs,immigration,china"~
-"You see our businesses moving over to Mexico. You see other people are moving into Mexico. Mexico is going to become the next China on a smaller level"~~1~0~0~0~"jobs"~"china"~"jobs,wall,foeignpolicy,immigration,china"~
-"If they make one mistake its on your newscasts all night, all week, all month. The police in this country have done an unbelievable job of keeping law and order"~~1~0~0~0~"police"~"wall"~"police,wall,character,clinton,foreignpolicy,guns"~
-"Drug dealers and gang members are given a slap on the wrist and turned loose on the street. This needs to stop"~~1~0~0~0~"police"~"wall"~"police,wall,guns"~
+"This country is dying. And our workers are losing their jobs."~~1~1~0~0~"jobs"~"immigration"~"jobs,immigration,china"~
+"You see our businesses moving over to Mexico. You see other people are moving into Mexico. Mexico is going to become the next China on a smaller level."~~1~0~0~0~"jobs"~"china"~"jobs,wall,foeignpolicy,immigration,china"~
+"If they make one mistake its on your newscasts all night, all week, all month. The police in this country have done an unbelievable job of keeping law and order."~~1~0~0~0~"police"~"wall"~"police,wall,character,clinton,foreignpolicy,guns"~
+"Drug dealers and gang members are given a slap on the wrist and turned loose on the street. This needs to stop."~~1~0~0~0~"police"~"wall"~"police,wall,guns"~
 "I'm going to look into colleges. .... We're going to do something with regard to really smart financing."~~1~0~0~0~"education"~"children"~"education,children,jobs"~
-"I'm not concerned about the kids growing up in wealthy communities, where high property taxes have allowed them to build great schools, hire the best teachers, and provide all the supplies they need. Those schools are doing fine"~~1~0~0~0~"children"~"taxes"~"children,taxes,education"~
-"I'm a tremendous believer in education, but education has to be at a local level"~~1~0~1~0~"education"~"children"~"children,education"~
+"I'm not concerned about the kids growing up in wealthy communities, where high property taxes have allowed them to build great schools, hire the best teachers, and provide all the supplies they need. Those schools are doing fine. I want to help children from middle and lower class families succeed."~~1~0~0~0~"children"~"taxes"~"children,taxes,education"~
+"I'm a tremendous believer in education, but education has to be at a local level."~~1~0~1~0~"education"~"children"~"children,education"~
 "How are you doing? It's nice to finally get a chance to talk to you!"~"hi"~2~0~1~0~"none"~"none"~"none"~
 "Nice to meet you! It's truly a pleasure."~"hey"~2~0~1~0~"none"~"none"~"none"~
 "How have you been?"~"what's up"~2~0~1~0~"none"~"none"~"none"~
 "I love everybody, and everybody loves me! I have great relationships with everyone."~~2~1~1~0~"character"~"clinton"~"character,clinton"~
+"China should make Kim Jon Un disappear"~~1~0~0~1~"china"~"foreignpolicy"~"china,foreignpolicy"~
+"China totally controls North Korea; they're just taunting us. "~~1~0~0~1~"china"~"foreignpolicy"~"china,foreignpolicy"~
+"China is our enemy; they're bilking us for billions."~~1~0~0~1~"china"~"trade"~"china,trade,foreignpolicy,jobs"~
+"We need to make economy dynamic; we need to bring back jobs from China & Mexico."~~1~0~0~1~"jobs"~"china"~"jobs,china,foreignpolicy"~
+"China threatens US with cyber warfare & industrial espionage. We need to wake up, and we need to wake up fast folks, or we're not going to have a country anymore!"~~1~0~0~1~"china"~"foreignpolicy"~"china,foreignpolicy,education"~
+"It's not free trade with China; it's stupid trade. What we need to do is repatriate jobs that China has been stealing."~~1~0~0~1~"china"~"trade"~"china,trade,jobs"~
+"Here's the story; it wouldn't be a bad idea to legalize drugs and use tax revenue to fund drug education. From what I've seen Colorado has been a good example but I think we need more time to be sure about it."~~1~0~1~0~"education"~"taxes"~"education,taxes"~
+"We need to cut the Department of Education and Common Core. They just aren't working people, and they won't unless we make some changes."~~1~0~1~1~"education"~"children"~"education,children,jobs"~
+"Well, I'll tell you what we need. We need more comprehensive education and less limiting subjects. These kids are couped up all day long studying the answers to the standardized tests word for word every day. This has to change."~~1~0~1~1~"education"~"children"~"children,education,jobs"~
+"Every child in America deserves a great education and an opportunity to achieve their dreams. We will enhance education options for students through school choice and charters, and respect homeschoolers in their quest for educational alternatives. We will also make it easier for families to afford college so students aren’t buried in debt.
+"~~1~0~1~1~"education"~"children"~"education,children,jobs"~
+"I'm going to look into colleges. .... We're going to do something with regard to really smart financing, and we're going to do it bigly."~~1~0~1~1~"education"~"children"~"education,children,jobs"~
+"Easy. Cut business rate to 15 percent. Reduce individual rates to three brackets of 12, 25, and 33 percent, with a 0 percent rate for many. Add above-the-line deduction for childcare costs, including for stay-at-home parents.
+"~~1~0~1~1~"taxes"~"jobs"~"taxes,jobs,trade"~
+"Well, for one we could repeal the inheritance tax to offset the one-time wealth tax. From there we should also raise graduated taxes on hedge fund managers."~~1~0~0~1~"taxes"~"trade"~"taxes,trade,jobs"~
+"Believe me, I know taxes better than anyone. My tax returns – I'm sure you've seen pictures of them – come up to my neck. And let me tell you, I will make the best tax reforms."~~1~0~1~1~"taxes"~"character"~"taxes,character"~
+"We need to simplify the tax code. It currently benefits large corporations who can afford a dedicated tax specialist, but it's hurting our middle class."~~1~0~1~1~"taxes"~"jobs"~"taxes,jobs"~
+"Well, if you ask me – and I know better than anyone - cutting tax rates incentivizes a strong national work ethic."~~1~0~1~1~"taxes"~"jobs"~"taxes,jobs"~
+"Tax deductions on simple things such as my proposed child savings account will help middle class families."~~1~0~1~1~"taxes"~"children"~"taxes,children"~
+"Hillary Clinton is probably the most crooked person that has ever worked in American politics. Disgraceful!"~~1~0~1~1~"clinton"~"foreignpolicy"~"clinton,foreignpolicy"~
+"Crooked Hillary is responsible for the deaths of many patriotic Americans who died for the country the loved."~~1~0~0~1~"clinton"~"foreignpolicy"~"clinton,foreignpolicy,terrorism"~
+"The deal Clinton made with Iran was an absolute disaster."~~1~0~1~1~"clinton"~"foreignpolicy"~"clinton,foreignpolicy"~
+"Talking about crooked Hillary behind her back is a little unfair. She needs here rest right now . . . as usual."~~1~1~0~0~"clinton"~"foreignpolicy"~"clinton,foreignpolicy"~
+"Secretary Clinton can't even manage an email serve – let alone an entire country – what do you really expect? She lacks the proper judgement, while I am committed to helping Americans first! "~~1~0~1~1~"clinton"~"character"~"clinton,character,terrorism"~
+"Here's the story, Hillary Clinton is paid for by wall street donors and she will never have her best interests in the American people. She prefers to cater to those who murder gays and people who choose not to be religious! We need to Make America Great Again, folks!"~~1~0~1~1~"clinton"~"terrorism"~"clinton,foreignpolicy,terrorism"~
+"Clinton chose to call veterans, police officers, and hard working Americans “deplorable” and “irredeemable”. I think we're going to need a bigger basket folks."~~1~0~1~1~"clinton"~"character"~"clinton,character,police,terrorism"~
+"I only said that about Rosie O'Donnell. Let me tell you, she's an exception."~"sexist"~1~0~1~1~"none"~"none"~"none"~
+"I fire people, that's what I do. And you've got to believe me, Obama is no exception!"~~1~0~1~1~"character"~"wall"~"clinton,wall"~
+"You know, wealthy people don't really like me. Don't get me wrong, I'm a people's person, but my heart is with the American people."~~1~0~1~1~"character"~"taxes"~"character,taxes,jobs"~
+"Mexico!"~"pay for the wall"~1~0~1~1~"none"~"none"~"none"~
+"I have a big heart. Usually if I fire somebody who’s bad, I’ll tell them how great they are. Because I don’t want to hurt people’s feelings."~~1~0~1~1~"character"~"clinton"~"character,clinton"~
+"Sorry losers and haters, but my I.Q. is one of the highest – and you all know it! Please don’t feel so stupid or insecure, it’s not your fault."~~1~0~0~1~"character"~"clinton"~"character,clinton"~
+"As everybody knows, but the haters & losers refuse to acknowledge, I do not wear a “wig.” My hair may not be perfect but it’s mine."~"your hair"~1~1~1~1~"none"~"none"~"none"~
+"The working guy would  be the one to elect me. He likes me. When I walk down the street, those cabbies start yelling out their windows."~~1~0~1~1~"character"~"jobs"~"character,jobs,trade"~
