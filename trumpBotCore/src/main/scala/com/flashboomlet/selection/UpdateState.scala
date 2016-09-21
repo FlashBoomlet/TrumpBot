@@ -3,7 +3,6 @@ package com.flashboomlet.selection
 import com.flashboomlet.data.ConversationState
 import com.flashboomlet.db.MongoDatabaseDriver
 import com.flashboomlet.preprocessing.ClassifiedInput
-import com.flashboomlet.preprocessing.Sentiment
 
 /**
   * Created by ttlynch on 9/17/16.
@@ -15,7 +14,9 @@ class UpdateState {
 
   val db: MongoDatabaseDriver = new MongoDatabaseDriver()
   val maxTopics = 7
-  val trcMax = 5
+  val trcMax = 3
+  val tmThreshold = 50
+  val r = scala.util.Random
 
   /**
     * This function will update the state of the conversation to keep track of where
@@ -30,15 +31,15 @@ class UpdateState {
     if (pastStates.length < 1) {
       initializeState(ci)
     } else {
-      val lastState = pastStates.sortBy(_.messageId).reverse.head // TODO: check to see if it is max id first
+      val lastState = pastStates.sortBy(_.messageId).reverse.head
       val topicCount = pastStates.map(_.topic).distinct.length
-      val trc = getTRC(lastState)
+      val trc = getTRC(lastState, ci)
       val transition = trc > trcMax
       val tm = troubleMode(lastState, ci, pastStates)
       val em = escapeMode(pastStates, lastState, tm)
-      val topic = getTopic(lastState, ci)
-      val parentTopic = if (lastState.parentTopic == topic) { "" } else { lastState.parentTopic }
-      val tangent = lastState.parentTopic != "" && lastState.tangent
+
+      val topicDetermination = getTopicInfo(lastState, pastStates, ci)
+
       val state = getState(lastState, pastStates, topicCount, tm, em)
 
       ConversationState(
@@ -47,19 +48,60 @@ class UpdateState {
         lengthState = ci.wordCount,
         sentimentConfidence = scala.math.ceil(ci.sentiment.confidence.toDouble).toLong,
         sentimentClass = ci.sentiment.result,
-        topic = topic,
+        topic = topicDetermination._1,
         topics = ci.allTopics,
         conversationState = state,
         transitionState = transition,
         topicResponseCount = trc,
         troubleMode = tm,
         escapeMode = em,
-        tangent = tangent,
-        parentTopic = parentTopic,
+        tangent = topicDetermination._2,
+        parentTopic = topicDetermination._3,
         message = ci.message,
         responseMessage = "",
-        tangentCount = lastState.tangentCount
+        tangentCount = topicDetermination._4
       )
+    }
+  }
+
+  /**
+    * Get Topic Info will return the information in regards to the topic and tangent topic when
+    * the user is reading the topic
+    *
+    * @param lastState the last known state of the conversation
+    * @param pastStates the past states of the conversation
+    * @param ci the classified information from the preprocessing
+    * @return the topic information for the conversation
+    */
+  private def getTopicInfo(
+    lastState: ConversationState,
+    pastStates: List[ConversationState],
+    ci: ClassifiedInput): (String, Boolean, String, Int) = {
+
+    if(pastStates.map(_.parentTopic).contains(ci.primaryTopic)
+      && pastStates.count(_.topic.contains(ci.primaryTopic)) > 0)
+    {
+      // Do Not Tangent
+
+      // Get Topic will manage taking the topic out of scope if needed
+      val topic = getTopic(lastState, ci)
+
+      val parentTopic = if (lastState.parentTopic == topic) { "" } else { lastState.parentTopic }
+      val tangent = lastState.parentTopic != "" && lastState.tangent
+      val topicCount = lastState.tangentCount
+
+      (topic, tangent, parentTopic, topicCount)
+
+    } else {
+      // Tangent
+
+      val parentTopic = ci.primaryTopic
+      val topic = selectRandomTopic(parentTopic, ci.allTopics)
+      val tangent = true
+      val topicCount = lastState.tangentCount + 1
+
+      (topic, tangent, parentTopic, topicCount)
+
     }
   }
 
@@ -97,11 +139,14 @@ class UpdateState {
     * @param lastState the last known state of the conversation
     * @return the topic response count
     */
-  private def getTRC(lastState: ConversationState): Int = {
+  private def getTRC(lastState: ConversationState, ci: ClassifiedInput): Int = {
     if (lastState.tangent || lastState.transitionState) {
-      0
-    } else {
+      2
+    } else if(lastState.topic == ci.primaryTopic) {
       lastState.topicResponseCount + 1
+    }
+    else {
+      1
     }
   }
 
@@ -115,7 +160,11 @@ class UpdateState {
     * @return the topic for this current state
     */
   private def getTopic(lastState: ConversationState, ci: ClassifiedInput): String = {
-    if(lastState.tangent && lastState.topicResponseCount > 2){
+    if(
+      lastState.tangent
+      && lastState.topicResponseCount > 2
+      && lastState.topic == ci.primaryTopic){
+
       lastState.parentTopic
     }
     else{
@@ -191,11 +240,12 @@ class UpdateState {
     if (lastState.troubleMode) {
       // already in trouble mode
       // check if they have gotten out or upgrade to escape
-      ci.sentiment.result == "Negative" && math.ceil(ci.sentiment.confidence.toDouble).toLong > 90
+      ci.sentiment.result == "Negative" &&
+        math.ceil(ci.sentiment.confidence.toDouble).toLong > tmThreshold
     } else {
       // not already in trouble mode
       // check to see if they deserve to be in
-      if (lastState.sentimentClass == "Negative" && lastState.sentimentConfidence > 90) {
+      if (lastState.sentimentClass == "Negative" && lastState.sentimentConfidence > tmThreshold) {
         // And the current state is negative, bam
         // The user must be out of the start to be in trouble mode
         if (count > 2) {
@@ -234,23 +284,16 @@ class UpdateState {
   }
 
   /**
-    * Sent to long converts the sentiment to a long
+    * Select Random Topic Randomly selects a topic or sub topic from the database of
+    * known responses.
     *
-    * The output will be as such:
-    *   -1: Negative
-    *   0: Neutral
-    *   1: Positive
-    *
-    * @param s the sentiment of the pre processing
-    * @return a long
+    * @return a random topic from the response database
     */
-  private def sentToLong(s: Sentiment): Long = {
-    if (s.result == "Positive") {
-      1L
-    } else if (s.result == "Neutral") {
-      0L
-    } else {
-      -1L
-    }
+  def selectRandomTopic(noGo: String, topics: List[String]): String = {
+    topics.filter(p => !p.contains(noGo))
+    val len = topics.length
+    val i = r.nextInt(len)
+    topics(i)
   }
+
 }
